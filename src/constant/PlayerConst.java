@@ -1,7 +1,9 @@
 package constant;
 
-public interface PlayerConstants {
-
+public interface PlayerConst {
+    // ========================================
+    // Action
+    // ========================================
     public static final int DIE = 0;
     public static final int JUMP_LEFT = 1;
     public static final int TURN_LEFT = 2;
@@ -11,10 +13,18 @@ public interface PlayerConstants {
     public static final int TURN_RIGHT = 6;
     public static final int RUN_RIGHT = 7;
     public static final int IDLE_RIGHT = 8;
+
+    // ========================================
+    // Direction
+    // ========================================
     public static final int DIR_LEFT = 9;
     public static final int DIR_RIGHT = 10;
-    public static final int DELTA_X = 3;
-    public static final int DELTA_Y = 3;
+
+    // ========================================
+    // Velocity
+    // ========================================
+    public static final int DELTA_X = 2;
+    public static final int DELTA_Y = 2;
 
     public static int GetSpriteActionAmount(int action) {
         switch (action) {

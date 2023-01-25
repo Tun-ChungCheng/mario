@@ -1,29 +1,39 @@
 package entity;
 
-import util.Load;
+import main.Game;
+import util.LoadImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static constant.PlayerConstants.*;
+import static constant.PlayerConst.*;
 
 
 public class Player extends Entity{
-    private int animationTick, animationIdx, animationSpeed = 120;
-    private int playAction = RUN_RIGHT;
+    private int animationTick, animationIdx, animationSpeed = 90;
+    private int playAction = IDLE_RIGHT;
     private int direction = DIR_RIGHT;
+
+    private int[][] mapData;
     private BufferedImage[][] animations;
 
+
+    Game game;
     public Player(int x, int y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
     }
 
+    public void loadMapData(int[][] mapData) {
+        this.mapData = mapData;
+    }
+
+
     private void loadAnimations() {
-        BufferedImage image = Load.GetSpriteAtlas(Load.PLAYER_ATLAS);
+        BufferedImage image = LoadImage.GetSpriteAtlas(LoadImage.PLAYER_ATLAS);
         animations = new BufferedImage[9][3];
 
-        animations[DIE][0] = image.getSubimage(0,     15, 15, 15);
+        animations[DIE][0] = image.getSubimage(0, 15, 15, 15);
 
         animations[JUMP_LEFT][0] = image.getSubimage(2 * 15, 0, 15, 15);
         animations[TURN_LEFT][0] = image.getSubimage(4 * 15, 0, 15, 15);
@@ -41,8 +51,31 @@ public class Player extends Entity{
 
     public void update(){
         updateAnimationTick();
+        updatePosition();
+        updateHitbox();
     }
 
+    private void updatePosition() {
+
+        if (isHit()) {
+
+        } else {
+            switch (playAction) {
+                case JUMP_LEFT, JUMP_RIGHT -> y -= DELTA_Y;
+                case RUN_RIGHT -> x += DELTA_X;
+                case DIE -> y += DELTA_Y;
+                case RUN_LEFT -> x -= DELTA_X;
+            }
+        }
+
+        if (mapData[(int)y][(int)x] >= 200 ) System.out.println("hit");
+    }
+
+    private boolean isHit() {
+        return (hitbox.x - (2 * DELTA_X) <= 0);
+
+
+    }
 
     private void updateAnimationTick() {
         if (++animationTick >= animationSpeed) {
@@ -57,7 +90,8 @@ public class Player extends Entity{
     }
 
     public void render(Graphics g){
-        g.drawImage(animations[playAction][animationIdx], x, y, 150, 150, null);
+        g.drawImage(animations[playAction][animationIdx], (int)x, (int)y, width, height, null);
+        drawHitbox(g);
     };
 
     public int getDirection() {
@@ -66,10 +100,6 @@ public class Player extends Entity{
 
     public void setDirection(int direction) {
         this.direction = direction;
-    }
-
-    public int getPlayAction() {
-        return playAction;
     }
 
     public void setPlayAction(int playAction) {
