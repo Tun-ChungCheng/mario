@@ -6,8 +6,6 @@ import main.GamePanel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static constant.PlayerConst.*;
-
 
 public class InputManager implements KeyListener {
     private GamePanel gamePanel;
@@ -23,6 +21,7 @@ public class InputManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println(e.getWhen());
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> player.setUp(true);
             case KeyEvent.VK_RIGHT -> player.setRight(true);

@@ -4,40 +4,34 @@ public interface PlayerConst {
     // ========================================
     // Action
     // ========================================
-    public static final int DIE = 0;
-    public static final int JUMP_LEFT = 1;
-    public static final int TURN_LEFT = 2;
-    public static final int RUN_LEFT = 3;
-    public static final int IDLE_LEFT = 4;
-    public static final int JUMP_RIGHT = 5;
-    public static final int TURN_RIGHT = 6;
-    public static final int RUN_RIGHT = 7;
-    public static final int IDLE_RIGHT = 8;
+    int DIE = 0;
+    int JUMP_LEFT = 1;
+    int TURN_LEFT = 2;
+    int RUN_LEFT = 3;
+    int IDLE_LEFT = 4;
+    int JUMP_RIGHT = 5;
+    int TURN_RIGHT = 6;
+    int RUN_RIGHT = 7;
+    int IDLE_RIGHT = 8;
 
     // ========================================
     // Direction
     // ========================================
-    public static final int DIR_LEFT = 9;
-    public static final int DIR_RIGHT = 10;
-    public static final int DIR_CENTER = 11;
+    int DIR_LEFT = 9;
+    int DIR_RIGHT = 10;
 
     // ========================================
     // Velocity
     // ========================================
-    public static final int DELTA_X = 1;
-    public static final int DELTA_Y = 2;
+    int DELTA_X = 1;
+    int DELTA_Y = 2;
+    int GRAVITY = 1;
+    int JUMP_SPEED = 3;
 
-    // IMPORTANT : DELTA_Y must greater equal GRAVITY
-    public static final int GRAVITY = 1;
-    public static final int JUMP_STRENGTH = 3;
-
-    public static int GetSpriteActionAmount(int action) {
-        switch (action) {
-            case RUN_LEFT:
-            case RUN_RIGHT:
-                return 3;
-            default:
-            return 1;
-        }
+    static int GetSpriteActionAmount(int action) {
+        return switch (action) {
+            case RUN_LEFT, RUN_RIGHT -> 3;
+            default -> 1;
+        };
     }
 }
