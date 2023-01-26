@@ -19,12 +19,17 @@ public interface PlayerConst {
     // ========================================
     public static final int DIR_LEFT = 9;
     public static final int DIR_RIGHT = 10;
+    public static final int DIR_CENTER = 11;
 
     // ========================================
     // Velocity
     // ========================================
-    public static final int DELTA_X = 2;
+    public static final int DELTA_X = 1;
     public static final int DELTA_Y = 2;
+
+    // IMPORTANT : DELTA_Y must greater equal GRAVITY
+    public static final int GRAVITY = 1;
+    public static final int JUMP_STRENGTH = 3;
 
     public static int GetSpriteActionAmount(int action) {
         switch (action) {

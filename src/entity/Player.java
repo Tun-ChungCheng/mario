@@ -6,14 +6,15 @@ import util.LoadImage;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static constant.GameConst.GAME_WIDTH;
 import static constant.PlayerConst.*;
 
 
 public class Player extends Entity{
-    private int animationTick, animationIdx, animationSpeed = 90;
+    private int animationTick, animationIdx, animationSpeed = 20;
     private int playAction = IDLE_RIGHT;
     private int direction = DIR_RIGHT;
-
+    private boolean up, right, down, left;
     private int[][] mapData;
     private BufferedImage[][] animations;
 
@@ -51,30 +52,56 @@ public class Player extends Entity{
 
     public void update(){
         updateAnimationTick();
+        updateAnimation();
         updatePosition();
         updateHitbox();
     }
 
+    private void updateAnimation() {
+        if (direction == DIR_LEFT) playAction = IDLE_LEFT;
+        if (direction == DIR_RIGHT) playAction = IDLE_RIGHT;
+
+        if (up && direction == DIR_LEFT) playAction = JUMP_LEFT;
+        if (up && direction == DIR_RIGHT) playAction = JUMP_RIGHT;
+        if (right) playAction = RUN_RIGHT;
+        if (left) playAction = RUN_LEFT;
+
+//        resetAnimationTick();
+
+    }
+
     private void updatePosition() {
-
-        if (isHit()) {
-
-        } else {
-            switch (playAction) {
-                case JUMP_LEFT, JUMP_RIGHT -> y -= DELTA_Y;
-                case RUN_RIGHT -> x += DELTA_X;
-                case DIE -> y += DELTA_Y;
-                case RUN_LEFT -> x -= DELTA_X;
-            }
+        if (up && !isSolid(x, y - JUMP_STRENGTH, x + hitbox.width,y + hitbox.height)) {
+            y -= JUMP_STRENGTH;
+        }
+        if (up && right && !isSolid(x + DELTA_X, y - JUMP_STRENGTH, x + hitbox.width,y + hitbox.height)) {
+            x += DELTA_X; y -= JUMP_STRENGTH;
+        }
+        if (up && left && !isSolid(x - DELTA_X, y - JUMP_STRENGTH, x + hitbox.width,y + hitbox.height)) {
+            x -= DELTA_X; y -= JUMP_STRENGTH;
+        }
+        if (right && !isSolid(x, y, x + hitbox.width + DELTA_X,y + hitbox.height)) {
+            x += DELTA_X;
+            direction = DIR_RIGHT;
+        }
+        if (left && !isSolid(x - DELTA_X, y, x + hitbox.width,y + hitbox.height)) {
+            x -= DELTA_X;
+            direction = DIR_LEFT;
         }
 
-        if (mapData[(int)y][(int)x] >= 200 ) System.out.println("hit");
+        fall();
+    }
+
+    private void fall() {
+        if (!isSolid(x, y, x + hitbox.width,y + hitbox.height + GRAVITY)) y += GRAVITY;
+    }
+
+    private boolean isSolid(int borderLeft, int borderTop, int borderRight, int borderBottom) {
+        return ((borderLeft <= 0) || (borderTop <= 0) || (borderRight >= GAME_WIDTH) || (mapData[borderBottom][x] >= 200));
     }
 
     private boolean isHit() {
-        return (hitbox.x - (2 * DELTA_X) <= 0);
-
-
+        return false;
     }
 
     private void updateAnimationTick() {
@@ -91,7 +118,6 @@ public class Player extends Entity{
 
     public void render(Graphics g){
         g.drawImage(animations[playAction][animationIdx], (int)x, (int)y, width, height, null);
-        drawHitbox(g);
     };
 
     public int getDirection() {
@@ -104,5 +130,37 @@ public class Player extends Entity{
 
     public void setPlayAction(int playAction) {
         this.playAction = playAction;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
     }
 }

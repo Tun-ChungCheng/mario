@@ -12,13 +12,10 @@ import static constant.PlayerConst.*;
 public class InputManager implements KeyListener {
     private GamePanel gamePanel;
     private Player player;
-    private int dir;
 
     public InputManager(GamePanel gamePanel){
         this.gamePanel = gamePanel;
-
         player = gamePanel.getGame().getPlayer();
-        dir = player.getDirection();
     }
 
     @Override
@@ -27,45 +24,20 @@ public class InputManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> {
-                if (dir == DIR_LEFT)  player.setPlayAction(JUMP_LEFT);
-                if (dir == DIR_RIGHT) player.setPlayAction(JUMP_RIGHT);
-            }
-            case KeyEvent.VK_RIGHT -> {
-                player.setPlayAction(RUN_RIGHT);
-                player.setDirection(DIR_RIGHT);
-            }
-            case KeyEvent.VK_DOWN -> {
-                player.setPlayAction(DIE);
-            }
-            case KeyEvent.VK_LEFT -> {
-                player.setPlayAction(RUN_LEFT);
-                player.setDirection(DIR_LEFT);
-            }
+            case KeyEvent.VK_UP -> player.setUp(true);
+            case KeyEvent.VK_RIGHT -> player.setRight(true);
+            case KeyEvent.VK_DOWN -> player.setDown(true);
+            case KeyEvent.VK_LEFT -> player.setLeft(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> {
-                if (dir == DIR_RIGHT) player.setPlayAction(IDLE_RIGHT);
-                if (dir == DIR_LEFT)  player.setPlayAction(IDLE_LEFT);
-                player.resetAnimationTick();
-            }
-            case KeyEvent.VK_RIGHT -> {
-                player.setPlayAction(IDLE_RIGHT);
-                player.resetAnimationTick();
-            }
-            case KeyEvent.VK_DOWN -> {
-                if (dir == DIR_RIGHT) player.setPlayAction(IDLE_RIGHT);
-                if (dir == DIR_LEFT)  player.setPlayAction(IDLE_LEFT);
-                player.resetAnimationTick();
-            }
-            case KeyEvent.VK_LEFT -> {
-                player.setPlayAction(IDLE_LEFT);
-                player.resetAnimationTick();
-            }
+            case KeyEvent.VK_UP -> player.setUp(false);
+            case KeyEvent.VK_RIGHT -> player.setRight(false);
+            case KeyEvent.VK_DOWN -> player.setDown(false);
+            case KeyEvent.VK_LEFT -> player.setLeft(false);
         }
     }
 }

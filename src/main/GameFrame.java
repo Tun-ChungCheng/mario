@@ -9,10 +9,12 @@ public class GameFrame {
     public GameFrame(GamePanel gamePanel) {
         window = new JFrame("Super Mario Bro.");
 
-        window.add(gamePanel);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setResizable(false);
+
+        window.add(gamePanel);
         window.pack();
+
         window.setVisible(true);
     }
 }
