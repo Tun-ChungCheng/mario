@@ -1,20 +1,21 @@
 package manager;
 
-import main.Game;
-import util.LoadImage;
+import util.ImagesLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static constant.MapConst.MAP_HEIGHT;
-import static constant.MapConst.MAP_WIDTH;
-
 public class MapManager {
+    private static final String MAP1 = "map1.png";
+    public static final int MAP_WIDTH = 10752;
+    public static final int MAP_HEIGHT = 720;
+
     private BufferedImage mapSprite;
 
     public int[][] mapData;
+
     public MapManager() {
-        mapSprite = LoadImage.GetSpriteAtlas(LoadImage.LEVEL_ATLAS);
+        mapSprite = ImagesLoader.loadImage(MAP1);
 
         mapData = new int[MAP_HEIGHT][MAP_WIDTH];
 

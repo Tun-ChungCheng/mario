@@ -2,10 +2,11 @@ package manager;
 
 import java.awt.*;
 
-import static constant.GameConst.GAME_HEIGHT;
-import static constant.GameConst.GAME_WIDTH;
-import static constant.MapConst.MAP_HEIGHT;
-import static constant.MapConst.MAP_WIDTH;
+
+import static main.GamePanel.GAME_HEIGHT;
+import static main.GamePanel.GAME_WIDTH;
+import static manager.MapManager.MAP_HEIGHT;
+import static manager.MapManager.MAP_WIDTH;
 
 public class Camera {
     private int x, y;

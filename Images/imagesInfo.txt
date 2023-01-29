@@ -1,0 +1,10 @@
+// mario's images
+o idleLeft.png
+o idleRight.png
+s runningLeft.png 3
+s runningRight.png 3
+o jumpLeft.png
+o jumpRight.png
+
+// scenery images
+o map1.png
