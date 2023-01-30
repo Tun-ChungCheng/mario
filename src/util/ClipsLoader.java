@@ -49,4 +49,9 @@ public class ClipsLoader {
         }
     }
 
+    public void play(String name) {
+        ClipInfo clipInfo = (ClipInfo) clipsMap.get(name);
+        if (clipInfo == null) System.out.println( "Error: " + name + "not stored");
+        else clipInfo.play();
+    }
 }

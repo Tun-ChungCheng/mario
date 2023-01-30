@@ -1,11 +1,15 @@
 package util;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
+import static manager.MapManager.MAP_HEIGHT;
+import static manager.MapManager.MAP_WIDTH;
 
 
 public class ImagesLoader {
@@ -195,21 +199,21 @@ public class ImagesLoader {
         return (BufferedImage) imagesList.get(0);
     }
 
-    public BufferedImage getImage(String imageName, int imagePosition) {
-    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+    public BufferedImage getImage(String imageName, int position) {
+    	ArrayList imagesList = imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return null;
         }
 
         int imagesListSize = imagesList.size();
-        if (imagePosition < 0) return (BufferedImage) imagesList.get(0);
-        else if (imagePosition >= imagesListSize) {
-            int newPosition = imagePosition % imagesListSize;
+        if (position < 0) return (BufferedImage) imagesList.get(0);
+        else if (position >= imagesListSize) {
+            int newPosition = position % imagesListSize;
             return (BufferedImage) imagesList.get(newPosition);
         }
 
-        return (BufferedImage) imagesList.get(imagePosition);
+        return (BufferedImage) imagesList.get(position);
     }
 
     public int numImages(String imageName) {
@@ -223,10 +227,26 @@ public class ImagesLoader {
     }
 
     public boolean isLoaded(String imageName) {
-        ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+        ArrayList imagesList = imagesMap.get(imageName);
         if (imagesList == null) return false;
         else return true;
     }
-    
-    
+
+    public int[][] getMapRedPixelValue(String imageName) {
+        BufferedImage image = imagesMap.get(imageName).get(0);
+        if (image == null) {
+            System.out.println("No image(s) stored under " + imageName);
+            return null;
+        }
+
+        int[][] map = new int[MAP_HEIGHT][MAP_WIDTH];
+        for (int i = 0; i < MAP_HEIGHT; i++) {
+            for (int j = 0; j < MAP_WIDTH; j++) {
+                Color color = new Color(image.getRGB(j, i));
+                map[i][j] = color.getRed();
+            }
+        }
+
+        return map;
+    }
 }

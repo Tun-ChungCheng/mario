@@ -13,11 +13,10 @@ import java.awt.*;
 
 
 public class GamePanel extends JPanel implements Runnable{
-    public static final int GAME_WIDTH = 1344;
-    public static final int GAME_HEIGHT = 720;
-    public static final int FPS = 120;
-    public static final int UPS = 200;
-
+    public static final int PANEL_WIDTH = 1344;
+    public static final int PANEL_HEIGHT = 720;
+    private static final int FPS = 120;
+    private static final int UPS = 200;
     private static final String IMAGES_INFO = "imagesInfo.txt";
     private static final String SOUNDS_INFO = "soundsInfo.txt";
 
@@ -33,17 +32,18 @@ public class GamePanel extends JPanel implements Runnable{
     private Camera     camera;
 
     public GamePanel() {
-        setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setFocusable(true);
         requestFocus();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         ClipsLoader clipsLoader = new ClipsLoader(SOUNDS_INFO);
 
+        clipsLoader.play("background");
+
         mapManager = new MapManager();
-        player = new Player(200, 500, 64, 64, imagesLoader);
+        player = new Player(200, 500, 64, 64, imagesLoader, clipsLoader, "map1");
         camera = new Camera();
-        player.loadMapData(mapManager.getMapData());
 
         addKeyListener(new InputManager(player));
     }
@@ -108,9 +108,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void gameUpdate() {
-        camera.update(player.getX(), player.getY());
-        mapManager.update();
-        player.update();
+        if (!gameOver && !isPaused) {
+            camera.update(player.getX(), player.getY());
+            player.update();
+        }
     }
 
     public void gameRender(Graphics g) {

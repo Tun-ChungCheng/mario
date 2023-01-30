@@ -90,4 +90,11 @@ public class ClipInfo implements LineListener {
             }
         }
     }
+
+    public void play() {
+        if (clip != null) {
+            isLooping = true;
+            clip.start();
+        }
+    }
 }

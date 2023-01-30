@@ -2,75 +2,89 @@ package sprite;
 
 
 import util.ImagesLoader;
-import util.ImagesPlayer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static manager.MapManager.MAP_WIDTH;
+
 
 public abstract class Sprite{
-    private static final int X_STEP = 1;
-    private static final int Y_STEP = 1;
-    private static final int GRAVITY = 1;
+    protected static final int X_STEP = 1;
+    protected static final int Y_STEP = 1;
+    protected static final int GRAVITY = 3;
 
     protected int x, y;
     protected int width, height;
-    protected int dx, dy;
-    protected int gravity;
-    protected Rectangle hitbox;
+    protected int dx = 1, dy = 1;
     
 
     private ImagesLoader imagesLoader;
     private String imageName;
     private BufferedImage image;
-
-    private ImagesPlayer player;
     private boolean isLooping;
+    private int animationTick, animationIndex, animationSpeed;
+    private int[][] mapRedPixelValue;
 
-    public Sprite(int x, int y, int w, int h, ImagesLoader imsLd, String name) {
+
+
+    public Sprite(int x, int y, int width, int height,
+                  ImagesLoader imagesLoader, String imageName, String mapName) {
         this.x = x; this.y = y;
-        width = w; height = h;
-        
-        imagesLoader = imsLd;
-        setImage(name);
-        hitbox = new Rectangle(x, y, w, h);
-        dx = X_STEP; dy = Y_STEP;
-        gravity = GRAVITY;
+        this.width = width; this.height = height;
+        this.imagesLoader = imagesLoader;
 
+        setImage(imageName);
+        loadMapRedPixelValue(mapName);
     }
 
     public void setImage(String name) {
         imageName = name;
         image = imagesLoader.getImage(imageName);
         if (image == null) System.out.println("No sprite image for " + imageName);
-        else {
-
-        }
-        player = null;
         isLooping = false;
     }
 
-    public void loopImage(int animationPeriod, double sequenceDuration) {
+    private void loadMapRedPixelValue(String mapName) {
+        this.mapRedPixelValue = imagesLoader.getMapRedPixelValue(mapName);
+    }
+
+    protected void loopImage(int animationSpeed) {
         if (imagesLoader.numImages(imageName) > 1) {
-            player = null;
-            player = new ImagesPlayer(imageName, animationPeriod, sequenceDuration, true, imagesLoader);
+            this.animationSpeed = animationSpeed;
             isLooping = true;
         } else System.out.println(imageName + " is not a sequence of images");
     }
 
-    protected void updateHitbox() {
-        hitbox.x = x;
-        hitbox.y = y;
+    private void updateTick() {
+        if (++animationTick >= animationSpeed) {
+            animationTick = 0;
+            if (++animationIndex >= imagesLoader.numImages(imageName))
+                animationIndex = 0;
+        }
+    }
+
+    public void update() {
+        if (isLooping) updateTick();
+        updateFalling();
+    }
+
+    private void updateFalling() {
+        if (!isSolid(x, y, x + width,y + height + GRAVITY)) y += GRAVITY;
+    }
+
+    protected boolean isSolid(int left, int top, int right, int bottom) {
+        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) || (mapRedPixelValue[bottom][x] >= 200));
     }
 
     public void render(Graphics g){
         if (image == null) g.fillRect(x, y, width, height);
         else {
-            if (isLooping) image = player.getCurrentImage();
+            if (isLooping) image = imagesLoader.getImage(imageName, animationIndex);
             g.drawImage(image, x, y, width, height, null);
         }
     }
-    
+
     public int getX() {
 		return x;
 	}

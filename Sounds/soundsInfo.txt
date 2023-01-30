@@ -1,1 +1,3 @@
 background background.wav
+
+jump jump.wav
