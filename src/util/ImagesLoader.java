@@ -3,15 +3,15 @@ package util;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+
 public class ImagesLoader {
     private final static String IMAGE_DIR = "Images/";
 
-    private HashMap imagesMap;
+    private HashMap<String, ArrayList<BufferedImage>> imagesMap;
     
 
     public ImagesLoader(String imagesInfo) {
@@ -77,7 +77,7 @@ public class ImagesLoader {
 
         BufferedImage bufferedImage = loadImage(filename);
         if (bufferedImage != null) {
-            ArrayList imagesList = new ArrayList();
+            var imagesList = new ArrayList<BufferedImage>();
             imagesList.add(bufferedImage);
             imagesMap.put(name, imagesList);
             System.out.println("  Stored " + name + "/" + filename);
@@ -95,8 +95,7 @@ public class ImagesLoader {
 
     // --------- load numbered images -------------------------------
 
-    private void getNumberedImages(String line) {
-    }
+    private void getNumberedImages(String line) {}
 
     // --------- load image strip -------------------------------
 
@@ -126,22 +125,25 @@ public class ImagesLoader {
         if (strip == null) return 0;
 
         ArrayList imagesList = new ArrayList();
-        System.out.print("  Adding " + name + "/" + filename + "... ");
-//        for (int i = 0, count; i < strip.length; i++)
-
+        int loadCount = 0;
+        System.out.println("  Adding " + name + "/" + filename + "... ");
+        for (int i = 0; i < strip.length; i++) {
+        	imagesList.add(strip[i]);
+        	loadCount++;
+        }
+        
+        if (loadCount == 0) System.out.println("No images loaded for " + name);
+        else imagesMap.put(name, imagesList);
+        	
+        return loadCount;
     }
 
 
-    // ------ grouped filename seq. of images ---------
+    
 
-    private void getGroupImages(String line) {
-    }
+	// ------ grouped filename seq. of images ---------
 
-
-
-
-
-
+    private void getGroupImages(String line) {}
 
 
 
@@ -157,12 +159,34 @@ public class ImagesLoader {
             throw new RuntimeException(e);
         }
     }
+    
+    private BufferedImage[] loadStripImageArray(String filename, int number) {
+		if (number <= 0) {
+			System.out.println("number <= 0; returning null");
+			return null;
+		}
+
+		BufferedImage stripImage;
+		if ((stripImage = loadImage(filename)) == null) {
+			System.out.println("Returning null");
+		    return null;
+		}
+		
+		int subImageWidth = stripImage.getWidth() / ((number * 2) - 1); // Include space interval
+		int subImageHeight = stripImage.getHeight();
+		var strip = new BufferedImage[number];
+		for (int i = 0, index = 0; index < number; i += 2, index++) { // Skip space interval
+			strip[index] = stripImage.getSubimage(i * subImageWidth, 0,
+												  subImageWidth, subImageHeight);
+		}
+		return strip;
+    }
 
 
     // ------------------ access methods -------------------
 
     public BufferedImage getImage(String imageName) {
-        ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return null;
@@ -172,7 +196,7 @@ public class ImagesLoader {
     }
 
     public BufferedImage getImage(String imageName, int imagePosition) {
-        ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return null;
@@ -189,7 +213,7 @@ public class ImagesLoader {
     }
 
     public int numImages(String imageName) {
-        ArrayList imagesList = new ArrayList();
+    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return 0;
@@ -203,4 +227,6 @@ public class ImagesLoader {
         if (imagesList == null) return false;
         else return true;
     }
+    
+    
 }

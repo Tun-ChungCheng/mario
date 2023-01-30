@@ -1,13 +1,8 @@
 package sprite;
 
-import lombok.Data;
 import util.ImagesLoader;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 import static manager.MapManager.MAP_WIDTH;
-
 
 
 public class Player extends Sprite {
@@ -15,7 +10,7 @@ public class Player extends Sprite {
     private static final int JUMP_SPEED = 3;
 
     private int animTick, animIdx, animSpeed = 20;
-    private int playAction = 1;
+    private boolean up, right, down, left;
 
     private boolean isFacingRight = true;
     private int[][] mapData;
@@ -94,10 +89,43 @@ public class Player extends Sprite {
         }
     }
 
-
     public void resetAnimationTick() {
         animTick = animIdx = 0;
     }
+
+    
+    
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
 
 
 }

@@ -1,14 +1,13 @@
 package sprite;
 
 
-import lombok.Data;
 import util.ImagesLoader;
 import util.ImagesPlayer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-@Data
+
 public abstract class Sprite{
     private static final int X_STEP = 1;
     private static final int Y_STEP = 1;
@@ -19,7 +18,7 @@ public abstract class Sprite{
     protected int dx, dy;
     protected int gravity;
     protected Rectangle hitbox;
-    protected boolean up, right, down, left;
+    
 
     private ImagesLoader imagesLoader;
     private String imageName;
@@ -71,6 +70,12 @@ public abstract class Sprite{
             g.drawImage(image, x, y, width, height, null);
         }
     }
+    
+    public int getX() {
+		return x;
+	}
 
-
+	public int getY() {
+		return y;
+	}
 }
