@@ -3,8 +3,9 @@ package main;
 import manager.Camera;
 import manager.InputManager;
 import manager.MapManager;
+import sprite.Enemy;
 import sprite.Player;
-import util.ClipsLoader;
+import manager.SoundManager;
 import util.ImagesLoader;
 
 import javax.swing.*;
@@ -18,7 +19,6 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int FPS = 120;
     private static final int UPS = 200;
     private static final String IMAGES_INFO = "imagesInfo.txt";
-    private static final String SOUNDS_INFO = "soundsInfo.txt";
 
     private Thread animator;
     private volatile boolean running  = false;
@@ -27,9 +27,11 @@ public class GamePanel extends JPanel implements Runnable{
     private volatile boolean gameOver = false;
     private int score = 0;
 
-    private Player     player;
+    private Player player;
+    private Enemy enemy;
+    private Camera camera;
     private MapManager mapManager;
-    private Camera     camera;
+
 
     public GamePanel() {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -37,12 +39,12 @@ public class GamePanel extends JPanel implements Runnable{
         requestFocus();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-        ClipsLoader clipsLoader = new ClipsLoader(SOUNDS_INFO);
-
-        clipsLoader.play("background");
+        SoundManager soundManager = new SoundManager();
+        soundManager.startBackgroundMusic();
 
         mapManager = new MapManager();
-        player = new Player(200, 500, 64, 64, imagesLoader, clipsLoader, "map1");
+        player = new Player(200, 500, 48, 48, imagesLoader, soundManager, "map1");
+        enemy = new Enemy(200, 500, 32, 32, imagesLoader, "mushroom", "map1");
         camera = new Camera();
 
         addKeyListener(new InputManager(player));
@@ -111,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable{
         if (!gameOver && !isPaused) {
             camera.update(player.getX(), player.getY());
             player.update();
+            enemy.update();
         }
     }
 
@@ -118,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable{
         camera.render(g);
         mapManager.draw(g);
         player.render(g);
+        enemy.render(g);
     }
 
     public void resumeGame() {

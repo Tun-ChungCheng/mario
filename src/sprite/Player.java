@@ -1,20 +1,21 @@
 package sprite;
 
-import util.ClipsLoader;
+import manager.SoundManager;
 import util.ImagesLoader;
 
 
 public class Player extends Sprite {
     private static final int JUMP_SPEED = 5;
-
+    private static final int MAX_X_SPEED = 5;
+    private int dx = 1, dy = 1, xVelocity, yVelocity;
     private boolean up, right, down, left, jump;
     private boolean isFacingRight = true;
-    private ClipsLoader clipsLoader;
+    private SoundManager soundManager;
 
     public Player(int x, int y, int width, int height,
-                  ImagesLoader imagesLoader, ClipsLoader clipsLoader, String mapName) {
+                  ImagesLoader imagesLoader, SoundManager soundManager, String mapName) {
         super(x, y, width, height, imagesLoader, "idleRight", mapName);
-        this.clipsLoader = clipsLoader;
+        this.soundManager = soundManager;
     }
 
     public void update(){
@@ -82,4 +83,8 @@ public class Player extends Sprite {
 	public void setLeft(boolean left) {
 		this.left = left;
 	}
+
+    public boolean isJump() {
+        return jump;
+    }
 }

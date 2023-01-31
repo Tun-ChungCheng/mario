@@ -8,3 +8,6 @@ o jumpRight.png
 
 // scenery images
 o map1.png
+
+// enemy's images
+s mushroom.png 2

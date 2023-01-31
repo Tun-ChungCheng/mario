@@ -5,7 +5,7 @@ import javax.swing.WindowConstants;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class GameFrame extends JFrame implements WindowListener{
+public class GameFrame extends JFrame{
     private GamePanel gamePanel;
 
     public GameFrame() {
@@ -14,48 +14,9 @@ public class GameFrame extends JFrame implements WindowListener{
         gamePanel = new GamePanel();
         add(gamePanel);
 
-        addWindowListener(this);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setResizable(false);
         setVisible(true);
     }
-
-    // ----------------- window listener methods -------------
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        gamePanel.stopGame();
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-        gamePanel.resumeGame();
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-        gamePanel.pauseGame();
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
-
-    // ----------------------------------------------------
 }

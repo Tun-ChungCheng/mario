@@ -14,10 +14,10 @@ public abstract class Sprite{
     protected static final int Y_STEP = 1;
     protected static final int GRAVITY = 3;
 
+    private static final int FLOOR_RED_PIXEL_VALUE = 250;
+
     protected int x, y;
     protected int width, height;
-    protected int dx = 1, dy = 1;
-    
 
     private ImagesLoader imagesLoader;
     private String imageName;
@@ -25,7 +25,6 @@ public abstract class Sprite{
     private boolean isLooping;
     private int animationTick, animationIndex, animationSpeed;
     private int[][] mapRedPixelValue;
-
 
 
     public Sprite(int x, int y, int width, int height,
@@ -74,7 +73,8 @@ public abstract class Sprite{
     }
 
     protected boolean isSolid(int left, int top, int right, int bottom) {
-        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) || (mapRedPixelValue[bottom][x] >= 200));
+        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) ||
+                (mapRedPixelValue[bottom][x] == FLOOR_RED_PIXEL_VALUE));
     }
 
     public void render(Graphics g){
