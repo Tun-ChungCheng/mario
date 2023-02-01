@@ -5,9 +5,11 @@ s runningLeft.png 3
 s runningRight.png 3
 o jumpLeft.png
 o jumpRight.png
+o die.png
 
 // scenery images
 o map1.png
 
 // enemy's images
 s mushroom.png 2
+o mushroomDie.png

@@ -3,19 +3,24 @@ package sprite;
 import manager.SoundManager;
 import util.ImagesLoader;
 
+import java.util.ArrayList;
+
 
 public class Player extends Sprite {
+    private static final int WIDTH = 48;
+    private static final int HEIGHT = 48;
     private static final int JUMP_SPEED = 5;
-    private static final int MAX_X_SPEED = 5;
+
     private int dx = 1, dy = 1, xVelocity, yVelocity;
-    private boolean up, right, down, left, jump;
+    private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
     private SoundManager soundManager;
 
-    public Player(int x, int y, int width, int height,
-                  ImagesLoader imagesLoader, SoundManager soundManager, String mapName) {
-        super(x, y, width, height, imagesLoader, "idleRight", mapName);
+    ArrayList enemies;
+    public Player(int x, int y, ImagesLoader imagesLoader, SoundManager soundManager, String mapName, ArrayList enemies) {
+        super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight", mapName);
         this.soundManager = soundManager;
+        this.enemies = enemies;
     }
 
     public void update(){
@@ -25,15 +30,17 @@ public class Player extends Sprite {
         super.update();
     }
 
+
+
     private void updateImage() {
         if (isFacingRight) setImage("idleRight");
         if (!isFacingRight) setImage("idleLeft");
 
-        if (jump && isFacingRight) setImage("jumpRight");
-        if (jump && !isFacingRight) setImage("jumpLeft");
+        if (isJump && isFacingRight) setImage("jumpRight");
+        if (isJump && !isFacingRight) setImage("jumpLeft");
 
-        if (!jump && right) setRunningImages("runningRight");
-        if (!jump && left) setRunningImages("runningLeft");
+        if (!isJump && isRight) setRunningImages("runningRight");
+        if (!isJump && isLeft) setRunningImages("runningLeft");
     }
 
     private void setRunningImages(String name) {
@@ -44,47 +51,53 @@ public class Player extends Sprite {
     }
 
     private void updatePosition() {
-        if (up && !isSolid(x, y - JUMP_SPEED, x + width,y + height)) {
+        if (isUp && !isSolid(x, y - JUMP_SPEED, x + width,y + height)) {
             y -= JUMP_SPEED;
         }
-        if (up && right && !isSolid(x + dx, y - JUMP_SPEED, x + width,y + height)) {
+        if (isUp && isRight && !isSolid(x + dx, y - JUMP_SPEED, x + width,y + height)) {
             x += dx; y -= JUMP_SPEED;
         }
-        if (up && left && !isSolid(x - dx, y - JUMP_SPEED, x + width,y + height)) {
+        if (isUp && isLeft && !isSolid(x - dx, y - JUMP_SPEED, x + width,y + height)) {
             x -= dx; y -= JUMP_SPEED;
         }
-        if (right && !isSolid(x, y, x + width + dx,y + height)) {
+        if (isRight && !isSolid(x, y, x + width + dx,y + height)) {
             x += dx; isFacingRight = true;
         }
-        if (left && !isSolid(x - dx, y, x + width,y + height)) {
+        if (isLeft && !isSolid(x - dx, y, x + width,y + height)) {
             x -= dx; isFacingRight = false;
         }
     }
 
     private void updateJumpStatus() {
-        if (isSolid(x, y, x + width,y + height + GRAVITY)) jump = false;
+        if (isSolid(x, y, x + width,y + height + GRAVITY)) isJump = false;
         else {
-            jump = true;
+            isJump = true;
         }
     }
 
-	public void setUp(boolean up) {
-		this.up = up;
-	}
+    public void setDie() {
+        setImage("die");
+    }
 
-	public void setRight(boolean right) {
-		this.right = right;
-	}
+    public void setUp(boolean up) {
+        isUp = up;
+    }
 
-	public void setDown(boolean down) {
-		this.down = down;
-	}
+    public void setRight(boolean right) {
+        isRight = right;
+    }
 
-	public void setLeft(boolean left) {
-		this.left = left;
-	}
+    public void setDown(boolean down) {
+        isDown = down;
+    }
+
+    public void setLeft(boolean left) {
+        isLeft = left;
+    }
 
     public boolean isJump() {
-        return jump;
+        return isJump;
     }
+
+
 }

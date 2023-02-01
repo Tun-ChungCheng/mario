@@ -10,7 +10,7 @@ import util.ImagesLoader;
 
 import javax.swing.*;
 import java.awt.*;
-
+import java.util.ArrayList;
 
 
 public class GamePanel extends JPanel implements Runnable{
@@ -23,12 +23,11 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread animator;
     private volatile boolean running  = false;
     private volatile boolean isPaused = false;
-
     private volatile boolean gameOver = false;
     private int score = 0;
 
     private Player player;
-    private Enemy enemy;
+    private ArrayList<Enemy> enemies;
     private Camera camera;
     private MapManager mapManager;
 
@@ -43,11 +42,18 @@ public class GamePanel extends JPanel implements Runnable{
         soundManager.startBackgroundMusic();
 
         mapManager = new MapManager();
-        player = new Player(200, 500, 48, 48, imagesLoader, soundManager, "map1");
-        enemy = new Enemy(200, 500, 32, 32, imagesLoader, "mushroom", "map1");
         camera = new Camera();
+        enemies = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            enemies.add(new Enemy(randInt(200, 1500), 500, imagesLoader, "mushroom", "map1"));
+        }
+        player = new Player(200, 500, imagesLoader, soundManager, "map1", enemies);
 
         addKeyListener(new InputManager(player));
+    }
+
+    private int randInt(int max, int min) {
+        return min + (int)(Math.random() * (max - min + 1));
     }
 
     public void addNotify() {
@@ -111,9 +117,19 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
-            camera.update(player.getX(), player.getY());
+            camera.update(player.x, player.y);
             player.update();
-            enemy.update();
+            enemies.forEach(enemy -> enemy.update());
+            checkCollision();
+        }
+    }
+
+    private void checkCollision() {
+        for (Enemy enemy: enemies) {
+            if (player.intersects(enemy)) {
+                if (player.y <= enemy.y && player.isJump()) enemy.setDie();
+                player.setDie();
+            }
         }
     }
 
@@ -121,7 +137,7 @@ public class GamePanel extends JPanel implements Runnable{
         camera.render(g);
         mapManager.draw(g);
         player.render(g);
-        enemy.render(g);
+        enemies.forEach(enemy -> enemy.render(g));
     }
 
     public void resumeGame() {

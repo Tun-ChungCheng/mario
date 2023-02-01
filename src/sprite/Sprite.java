@@ -9,15 +9,12 @@ import java.awt.image.BufferedImage;
 import static manager.MapManager.MAP_WIDTH;
 
 
-public abstract class Sprite{
+public abstract class Sprite extends Rectangle{
     protected static final int X_STEP = 1;
     protected static final int Y_STEP = 1;
     protected static final int GRAVITY = 3;
 
     private static final int FLOOR_RED_PIXEL_VALUE = 250;
-
-    protected int x, y;
-    protected int width, height;
 
     private ImagesLoader imagesLoader;
     private String imageName;
@@ -29,8 +26,7 @@ public abstract class Sprite{
 
     public Sprite(int x, int y, int width, int height,
                   ImagesLoader imagesLoader, String imageName, String mapName) {
-        this.x = x; this.y = y;
-        this.width = width; this.height = height;
+        super(x, y, width, height);
         this.imagesLoader = imagesLoader;
 
         setImage(imageName);
@@ -85,11 +81,4 @@ public abstract class Sprite{
         }
     }
 
-    public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
 }

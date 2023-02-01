@@ -13,7 +13,7 @@ import static manager.MapManager.MAP_WIDTH;
 
 
 public class ImagesLoader {
-    private final static String IMAGE_DIR = "Images/";
+    private final static String IMAGE_DIR = "images/";
 
     private HashMap<String, ArrayList<BufferedImage>> imagesMap;
     
