@@ -26,7 +26,7 @@ public class Enemy extends Sprite{
     }
 
     private void updatePosition() {
-        if (isSolid(x - dx, y, width + dx, height)) dx *= -1;
+        if (isSolid(x - dx, y, x + width + dx, y + height)) dx *= -1;
         x -= dx;
     }
 
@@ -37,6 +37,10 @@ public class Enemy extends Sprite{
     public void setDie() {
         dx = 0;
         setImage("mushroomDie");
-        new Timer(1000, (e) -> isDie = true).start();
+        new Timer(200, (e) -> isDie = true).start();
+    }
+
+    public boolean isDie() {
+        return isDie;
     }
 }

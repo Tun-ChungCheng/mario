@@ -22,7 +22,10 @@ public class InputManager implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> {
-                if(!player.isJump()) player.setUp(true);
+                if(!player.isJump()) {
+                    player.setUp(true);
+                    player.playJumpSound();
+                }
             }
             case KeyEvent.VK_RIGHT -> player.setRight(true);
             case KeyEvent.VK_DOWN -> player.setDown(true);

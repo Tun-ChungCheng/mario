@@ -3,12 +3,10 @@ package sprite;
 import manager.SoundManager;
 import util.ImagesLoader;
 
-import java.util.ArrayList;
-
 
 public class Player extends Sprite {
-    private static final int WIDTH = 48;
-    private static final int HEIGHT = 48;
+    private static final int PLAYER_WIDTH = 48;
+    private static final int PLAYER_HEIGHT = 48;
     private static final int JUMP_SPEED = 5;
 
     private int dx = 1, dy = 1, xVelocity, yVelocity;
@@ -16,11 +14,11 @@ public class Player extends Sprite {
     private boolean isFacingRight = true;
     private SoundManager soundManager;
 
-    ArrayList enemies;
-    public Player(int x, int y, ImagesLoader imagesLoader, SoundManager soundManager, String mapName, ArrayList enemies) {
-        super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight", mapName);
+
+    public Player(int x, int y, ImagesLoader imagesLoader,
+                  SoundManager soundManager, String mapName) {
+        super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight", mapName);
         this.soundManager = soundManager;
-        this.enemies = enemies;
     }
 
     public void update(){
@@ -29,8 +27,6 @@ public class Player extends Sprite {
         updateJumpStatus();
         super.update();
     }
-
-
 
     private void updateImage() {
         if (isFacingRight) setImage("idleRight");
@@ -55,28 +51,36 @@ public class Player extends Sprite {
             y -= JUMP_SPEED;
         }
         if (isUp && isRight && !isSolid(x + dx, y - JUMP_SPEED, x + width,y + height)) {
-            x += dx; y -= JUMP_SPEED;
+            x += (dx / 2);
+            y -= JUMP_SPEED;
         }
         if (isUp && isLeft && !isSolid(x - dx, y - JUMP_SPEED, x + width,y + height)) {
-            x -= dx; y -= JUMP_SPEED;
+            x -= (dx / 2);
+            y -= JUMP_SPEED;
         }
         if (isRight && !isSolid(x, y, x + width + dx,y + height)) {
-            x += dx; isFacingRight = true;
+            isFacingRight = true;
+            x += dx;
+
         }
         if (isLeft && !isSolid(x - dx, y, x + width,y + height)) {
-            x -= dx; isFacingRight = false;
+            isFacingRight = false;
+            x -= dx;
         }
     }
 
     private void updateJumpStatus() {
         if (isSolid(x, y, x + width,y + height + GRAVITY)) isJump = false;
-        else {
-            isJump = true;
-        }
+        else isJump = true;
     }
 
     public void setDie() {
         setImage("die");
+//        soundManager.playSound("die");
+    }
+
+    public void playJumpSound() {
+        soundManager.playSound("jump");
     }
 
     public void setUp(boolean up) {
@@ -98,6 +102,7 @@ public class Player extends Sprite {
     public boolean isJump() {
         return isJump;
     }
+
 
 
 }

@@ -45,7 +45,12 @@ public class SoundManager {
     }
 
     public void startBackgroundMusic() {
+        background.loop(Clip.LOOP_CONTINUOUSLY);
         background.start();
     }
 
+    public void playSound(String filename) {
+        Clip clip = setClip(loadAudio(filename));
+        clip.start();
+    }
 }

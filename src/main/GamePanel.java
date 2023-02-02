@@ -18,7 +18,10 @@ public class GamePanel extends JPanel implements Runnable{
     public static final int PANEL_HEIGHT = 720;
     private static final int FPS = 120;
     private static final int UPS = 200;
+    private static final int SPAWN_X = 200;
+    private static final int SPAWN_Y = 500;
     private static final String IMAGES_INFO = "imagesInfo.txt";
+    private static final String MARIO_FONT = "C:\\Users\\User\\Desktop\\super_mario_bros_clone\\font\\mario-font.ttf";
 
     private Thread animator;
     private volatile boolean running  = false;
@@ -30,6 +33,8 @@ public class GamePanel extends JPanel implements Runnable{
     private ArrayList<Enemy> enemies;
     private Camera camera;
     private MapManager mapManager;
+    private FontMetrics fontMetrics;
+    private Font marioFont;
 
 
     public GamePanel() {
@@ -45,11 +50,14 @@ public class GamePanel extends JPanel implements Runnable{
         camera = new Camera();
         enemies = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(randInt(200, 1500), 500, imagesLoader, "mushroom", "map1"));
+            enemies.add(new Enemy(randInt(SPAWN_X, 1500), SPAWN_Y,
+                    imagesLoader, "mushroom", "map1"));
         }
-        player = new Player(200, 500, imagesLoader, soundManager, "map1", enemies);
+        player = new Player(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, "map1");
 
         addKeyListener(new InputManager(player));
+        marioFont = new Font(MARIO_FONT, Font.PLAIN, 24);
+        fontMetrics = this.getFontMetrics(marioFont);
     }
 
     private int randInt(int max, int min) {
@@ -128,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable{
         for (Enemy enemy: enemies) {
             if (player.intersects(enemy)) {
                 if (player.y <= enemy.y && player.isJump()) enemy.setDie();
-                player.setDie();
+                if (!enemy.isDie()) player.setDie();
             }
         }
     }
@@ -138,6 +146,21 @@ public class GamePanel extends JPanel implements Runnable{
         mapManager.draw(g);
         player.render(g);
         enemies.forEach(enemy -> enemy.render(g));
+        reportStatus(g);
+
+    }
+
+    private void reportStatus(Graphics g) {
+        StringBuilder whiteSpace = new StringBuilder();
+        for (int i = 0; i < 120; i++) whiteSpace.append(" ");
+
+        String title  = ("MARIO" + whiteSpace + "WORLD      TIME");
+        String record = ("%06d"  + whiteSpace + "%d-%d        %d").formatted(score, 1, 1, 30);
+        int x = (PANEL_WIDTH - fontMetrics.stringWidth(title)) / 2;
+        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 14;
+        g.setFont(marioFont);
+        g.drawString(title, x + camera.getX(), y + camera.getY());
+        g.drawString(record, x + camera.getX(), y + fontMetrics.getHeight() + camera.getY());
     }
 
     public void resumeGame() {
