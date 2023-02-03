@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable{
     private volatile boolean running  = false;
     private volatile boolean isPaused = false;
     private volatile boolean gameOver = false;
-    private int score = 0, world = 1, level = 1, time = 300, live = 3;
+    private int score = 0, world = 1, level = 1, countdown = 300, live = 3;
 
     private Player player;
     private ArrayList<Enemy> enemies;
@@ -44,16 +44,16 @@ public class GamePanel extends JPanel implements Runnable{
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         SoundManager soundManager = new SoundManager();
-        soundManager.startBackgroundMusic();
+        String currentMap = "map%d-%d".formatted(world, level);
 
-        mapManager = new MapManager();
+        mapManager = new MapManager(imagesLoader, currentMap);
         camera = new Camera();
         enemies = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             enemies.add(new Enemy(randInt(SPAWN_X, 1500), SPAWN_Y,
-                    imagesLoader, "mushroom", "map1"));
+                    imagesLoader, "mushroom", currentMap));
         }
-        player = new Player(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, "map1");
+        player = new Player(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, currentMap);
 
         addKeyListener(new InputManager(player));
         marioFont = new Font(MARIO_FONT, Font.PLAIN, 24);
@@ -112,6 +112,7 @@ public class GamePanel extends JPanel implements Runnable{
                 lastCheck = System.currentTimeMillis();
                 System.out.printf("FPS = %d | UPS = %d%n", frames, updates);
                 frames = updates = 0;
+                countdown--;
             }
         }
         System.exit(0);
@@ -152,11 +153,11 @@ public class GamePanel extends JPanel implements Runnable{
 
     private void reportStatus(Graphics g) {
         String title  = ("MARIO" + getWhiteSpace(30) + "WORLD" + getWhiteSpace(30) + "TIME" + getWhiteSpace(30) + "LIVES");
-        String record = ("%06d"  + getWhiteSpace(32) + "%d-%d" + getWhiteSpace(32) +   "%d" + getWhiteSpace(30) +    "&d")
-                .formatted(score, world, level, time, live);
+        String record = ("%06d"  + getWhiteSpace(35) + "%d-%d" + getWhiteSpace(35) + "%d"   + getWhiteSpace(35) + "%d")
+                .formatted(score, world, level, countdown, live);
 
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(title)) / 2;
-        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 14;
+        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
 
         g.setFont(marioFont);
         g.drawString(title,  x + camera.getX(), y + camera.getY());

@@ -11,6 +11,7 @@ public class SoundManager {
 
     public SoundManager() {
         background = setClip(loadAudio("background"));
+        background.start();
     }
 
     private AudioInputStream loadAudio(String filename) {
@@ -18,39 +19,30 @@ public class SoundManager {
 
         try {
             return AudioSystem.getAudioInputStream(new File(pathname));
-        } catch (UnsupportedAudioFileException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println(e);
         }
+        return null;
     }
 
     private Clip setClip(AudioInputStream audioSystem)  {
-        Clip clip;
         try {
-            clip = AudioSystem.getClip();
-        } catch (LineUnavailableException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
+            Clip clip = AudioSystem.getClip();
             clip.open(audioSystem);
-        } catch (LineUnavailableException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return clip;
+        } catch (Exception e) {
+            System.out.println(e);
         }
-
-        return clip;
+        return null;
     }
 
-    public void startBackgroundMusic() {
-        background.loop(Clip.LOOP_CONTINUOUSLY);
-        background.start();
-    }
-
-    public void playSound(String filename) {
-        Clip clip = setClip(loadAudio(filename));
+    public void playJumpSound() {
+        Clip clip = setClip(loadAudio("jump"));
         clip.start();
+    }
+
+    public void playDieSound() {
+        Clip dieClip = setClip(loadAudio("die"));
+        dieClip.start();
     }
 }

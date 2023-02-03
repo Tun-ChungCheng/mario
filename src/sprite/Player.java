@@ -9,17 +9,17 @@ public class Player extends Sprite {
     private static final int PLAYER_HEIGHT = 48;
     private static final int JUMP_SPEED = 5;
 
-    private int dx, dy = 1, previousX, currentX;
+    private int dx = 1, dy = 1;
     private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
     private SoundManager soundManager;
-
-
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
     public Player(int x, int y, ImagesLoader imagesLoader,
                   SoundManager soundManager, String mapName) {
         super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight", mapName);
         this.soundManager = soundManager;
-        previousX = currentX = x;
     }
 
     public void update(){
@@ -47,9 +47,6 @@ public class Player extends Sprite {
     }
 
     private void updatePosition() {
-        dx = Math.min(3, Math.abs(currentX - previousX + 1));
-
-        System.out.println(dx);
         if (isUp && !isSolid(x, y - JUMP_SPEED, x + width,y + height)) {
             y -= JUMP_SPEED;
         }
@@ -77,11 +74,7 @@ public class Player extends Sprite {
 
     public void setDie() {
         setImage("die");
-//        soundManager.playSound("die");
-    }
-
-    public void playJumpSound() {
-        soundManager.playSound("jump");
+//        soundManager.playDieSound();
     }
 
     public void setUp(boolean up) {
@@ -102,13 +95,5 @@ public class Player extends Sprite {
 
     public boolean isJump() {
         return isJump;
-    }
-
-    public void setPreviousX(int previousX) {
-        this.previousX = previousX;
-    }
-
-    public void setCurrentX(int currentX) {
-        this.currentX = currentX;
     }
 }

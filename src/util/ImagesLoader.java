@@ -24,7 +24,7 @@ public class ImagesLoader {
     }
 
     private void initLoader() {
-        imagesMap = new HashMap();
+        imagesMap = new HashMap<>();
     }
 
     private void loadImagesFile(String imagesInfo) {
@@ -153,7 +153,7 @@ public class ImagesLoader {
 
     // ------------------- Image Input ------------------
 
-    public static BufferedImage loadImage(String filename) {
+    public BufferedImage loadImage(String filename) {
         String pathname = IMAGE_DIR + filename;
 
         try {
@@ -226,12 +226,6 @@ public class ImagesLoader {
         return imagesList.size();
     }
 
-    public boolean isLoaded(String imageName) {
-        ArrayList imagesList = imagesMap.get(imageName);
-        if (imagesList == null) return false;
-        else return true;
-    }
-
     public int[][] getMapRedPixelValue(String imageName) {
         BufferedImage image = imagesMap.get(imageName).get(0);
         if (image == null) {
@@ -243,7 +237,10 @@ public class ImagesLoader {
         for (int i = 0; i < MAP_HEIGHT; i++) {
             for (int j = 0; j < MAP_WIDTH; j++) {
                 Color color = new Color(image.getRGB(j, i));
-                map[i][j] = color.getRed();
+                if (color.getRed() == 255) {
+                    map[i][j] = 1;
+                }
+                else map[i][j] = color.getRed();
             }
         }
 
