@@ -12,8 +12,8 @@ public class GameFrame extends JFrame{
         super("Super Mario Bro.");
 
         gamePanel = new GamePanel();
+        
         add(gamePanel);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setResizable(false);
