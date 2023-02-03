@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable{
     private volatile boolean running  = false;
     private volatile boolean isPaused = false;
     private volatile boolean gameOver = false;
-    private int score = 0;
+    private int score = 0, world = 1, level = 1, time = 300, live = 3;
 
     private Player player;
     private ArrayList<Enemy> enemies;
@@ -151,16 +151,21 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        StringBuilder whiteSpace = new StringBuilder();
-        for (int i = 0; i < 120; i++) whiteSpace.append(" ");
+        String title  = ("MARIO" + getWhiteSpace(30) + "WORLD" + getWhiteSpace(30) + "TIME" + getWhiteSpace(30) + "LIVES");
+        String record = ("%06d"  + getWhiteSpace(32) + "%d-%d" + getWhiteSpace(32) +   "%d" + getWhiteSpace(30) +    "&d")
+                .formatted(score, world, level, time, live);
 
-        String title  = ("MARIO" + whiteSpace + "WORLD      TIME");
-        String record = ("%06d"  + whiteSpace + "%d-%d        %d").formatted(score, 1, 1, 30);
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(title)) / 2;
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 14;
+
         g.setFont(marioFont);
-        g.drawString(title, x + camera.getX(), y + camera.getY());
-        g.drawString(record, x + camera.getX(), y + fontMetrics.getHeight() + camera.getY());
+        g.drawString(title,  x + camera.getX(), y + camera.getY());
+        g.drawString(record, x + camera.getX(), y + camera.getY() + fontMetrics.getHeight());
+    }
+
+    private String getWhiteSpace(int n) {
+        StringBuilder whiteSpaces = new StringBuilder();
+        return whiteSpaces.append(" ".repeat(Math.max(0, n))).toString();
     }
 
     public void resumeGame() {

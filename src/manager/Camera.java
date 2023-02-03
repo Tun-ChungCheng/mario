@@ -15,16 +15,13 @@ public class Camera {
     private int offsetMinX = 0;
     private int offsetMinY = 0;
 
-    public Camera() {}
 
     public void update(int playerX, int playerY) {
         x = playerX - (GamePanel.PANEL_WIDTH / 4);
         y = playerY - (GamePanel.PANEL_HEIGHT / 2);
 
-        if (x > offsetMaxX) x = offsetMaxX;
-        else if (x < offsetMinX) x = offsetMinX;
-        if (y > offsetMaxY) y = offsetMaxY;
-        else if (y < offsetMinY) y = offsetMinY;
+        x = Math.min(offsetMaxX, Math.max(offsetMinX, x));
+        y = Math.min(offsetMaxY, Math.max(offsetMinY, y));
     }
 
     public void render(Graphics g) {
