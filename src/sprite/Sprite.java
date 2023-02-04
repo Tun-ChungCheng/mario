@@ -10,18 +10,18 @@ import static manager.MapManager.MAP_WIDTH;
 
 
 public abstract class Sprite extends Rectangle{
-    protected static final int X_STEP = 1;
-    protected static final int Y_STEP = 1;
     protected static final int GRAVITY = 3;
 
     private static final int FLOOR_RED_PIXEL_VALUE = 250;
 
-    private ImagesLoader imagesLoader;
-    private String imageName;
+    private ImagesLoader  imagesLoader;
+    private String        imageName;
     private BufferedImage image;
-    private boolean isLooping;
-    private int animationTick, animationIndex, animationSpeed;
-    private int[][] mapRedPixelValue;
+    private boolean       isLooping;
+    private int           animationTick, 
+                          animationIndex, 
+                          animationSpeed;
+    private int[][]       mapRedPixelValue;
 
 
     public Sprite(int x, int y, int width, int height,
