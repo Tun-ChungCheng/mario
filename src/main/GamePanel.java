@@ -2,10 +2,12 @@ package main;
 
 import manager.Camera;
 import manager.InputManager;
-import manager.MapManager;
+import map.MapManager;
+import sprite.Block;
 import sprite.Enemy;
 import sprite.Player;
 import manager.SoundManager;
+import sprite.Sprite;
 import util.ImagesLoader;
 
 import javax.swing.*;
@@ -30,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable{
     private int score = 0, world = 1, level = 1, countdown = 300, live = 3;
 
     private Player player;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Sprite> elements;
     private Camera camera;
     private MapManager mapManager;
     private FontMetrics fontMetrics;
@@ -44,15 +46,12 @@ public class GamePanel extends JPanel implements Runnable{
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         SoundManager soundManager = new SoundManager();
-        String currentMap = "map%d-%d".formatted(world, level);
+        String currentMap = "world" + world + "level" + level;
+
 
         mapManager = new MapManager(imagesLoader, currentMap);
+        elements = mapManager.gameElement.elements;
         camera = new Camera();
-        enemies = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            enemies.add(new Enemy(randInt(SPAWN_X, 1500), SPAWN_Y,
-                    imagesLoader, "mushroom", currentMap));
-        }
         player = new Player(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, currentMap);
 
         addKeyListener(new InputManager(player));
@@ -60,9 +59,6 @@ public class GamePanel extends JPanel implements Runnable{
         fontMetrics = this.getFontMetrics(marioFont);
     }
 
-    private int randInt(int max, int min) {
-        return min + (int)(Math.random() * (max - min + 1));
-    }
 
     public void addNotify() {
         super.addNotify();
@@ -128,17 +124,37 @@ public class GamePanel extends JPanel implements Runnable{
         if (!gameOver && !isPaused) {
             camera.update(player.x, player.y);
             player.update();
-            enemies.forEach(enemy -> enemy.update());
+            elements.forEach(element -> element.update());
             checkCollision();
         }
     }
 
     private void checkCollision() {
-        for (Enemy enemy: enemies) {
-            if (player.intersects(enemy)) {
-                if (player.y <= enemy.y && player.isJump()) enemy.setDie();
-                if (!enemy.isDie()) player.setDie();
+        for (Sprite element: elements) {
+            String superClassName = element.getClass().getSuperclass().getSimpleName();
+            switch (superClassName) {
+                case "Enemy" -> {
+                    Enemy enemy = (Enemy) element;
+                    if (!enemy.isDie() && player.intersects(enemy)) {
+                        if (player.isJump()) enemy.setDie();
+                        if (!enemy.isDie()) player.setDie();
+                    }
+                }
+                case "Block" -> {
+                    Block block = (Block) element;
+                    if (player.intersects(block)) {
+                        if (player.y < block.y) {
+                            player.y = block.y - player.height;
+                            player.setJump(false);
+                        }
+                        if (player.y > block.y) {
+                            if (player.y <= block.y + block.height) player.y = block.y + block.height;
+                        }
+                    }
+
+                }
             }
+
         }
     }
 
@@ -146,7 +162,6 @@ public class GamePanel extends JPanel implements Runnable{
         camera.render(g);
         mapManager.draw(g);
         player.render(g);
-        enemies.forEach(enemy -> enemy.render(g));
         reportStatus(g);
 
     }

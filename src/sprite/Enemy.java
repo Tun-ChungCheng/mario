@@ -5,7 +5,7 @@ import util.ImagesLoader;
 import javax.swing.*;
 import java.awt.*;
 
-public class Enemy extends Sprite{
+public abstract class Enemy extends Sprite{
     private static final int WIDTH = 32;
     private static final int HEIGHT = 32;
 
@@ -23,6 +23,7 @@ public class Enemy extends Sprite{
     public void update() {
         super.update();
         updatePosition();
+        updateFalling();
     }
 
     private void updatePosition() {

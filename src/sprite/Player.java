@@ -7,9 +7,9 @@ import util.ImagesLoader;
 public class Player extends Sprite {
     private static final int PLAYER_WIDTH = 48;
     private static final int PLAYER_HEIGHT = 48;
-    private static final int JUMP_SPEED = 5;
+    private static final int JUMP_SPEED = 10;
 
-    private int dx = 1, dy = 1;
+    private int dx = 1, dy = 10;
     private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
     private SoundManager soundManager;
@@ -26,6 +26,7 @@ public class Player extends Sprite {
         updateImage();
         updatePosition();
         updateJumpStatus();
+        updateFalling();
         super.update();
     }
 
@@ -49,14 +50,12 @@ public class Player extends Sprite {
     private void updatePosition() {
         if (isUp && !isSolid(x, y - JUMP_SPEED, x + width,y + height)) {
             y -= JUMP_SPEED;
-        }
-        if (isUp && isRight && !isSolid(x + dx, y - JUMP_SPEED, x + width,y + height)) {
-            x += (dx / 2);
-            y -= JUMP_SPEED;
-        }
-        if (isUp && isLeft && !isSolid(x - dx, y - JUMP_SPEED, x + width,y + height)) {
-            x -= (dx / 2);
-            y -= JUMP_SPEED;
+            if (isRight && !isSolid(x + dx, y - JUMP_SPEED, x + width,y + height)) {
+                x += (dx / 2);
+            }
+            if (isLeft && !isSolid(x - dx, y - JUMP_SPEED, x + width,y + height)) {
+                x -= (dx / 2);
+            }
         }
         if (isRight && !isSolid(x, y, x + width + dx,y + height)) {
             isFacingRight = true;
@@ -74,7 +73,6 @@ public class Player extends Sprite {
 
     public void setDie() {
         setImage("die");
-//        soundManager.playDieSound();
     }
 
     public void setUp(boolean up) {
@@ -96,4 +94,9 @@ public class Player extends Sprite {
     public boolean isJump() {
         return isJump;
     }
+
+    public void setJump(boolean jump) {
+        isJump = jump;
+    }
+
 }

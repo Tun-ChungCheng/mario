@@ -6,7 +6,7 @@ import util.ImagesLoader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static manager.MapManager.MAP_WIDTH;
+import static map.MapManager.MAP_WIDTH;
 
 
 public abstract class Sprite extends Rectangle{
@@ -61,10 +61,9 @@ public abstract class Sprite extends Rectangle{
 
     public void update() {
         if (isLooping) updateTick();
-        updateFalling();
     }
 
-    private void updateFalling() {
+    protected void updateFalling() {
         if (!isSolid(x, y, x + width,y + height + GRAVITY)) y += GRAVITY;
     }
 

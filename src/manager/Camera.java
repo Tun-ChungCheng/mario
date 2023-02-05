@@ -5,8 +5,8 @@ import main.GamePanel;
 import java.awt.Graphics;
 
 
-import static manager.MapManager.MAP_HEIGHT;
-import static manager.MapManager.MAP_WIDTH;
+import static map.MapManager.MAP_HEIGHT;
+import static map.MapManager.MAP_WIDTH;
 
 public class Camera {
     private int x, y;

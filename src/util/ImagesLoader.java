@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import static manager.MapManager.MAP_HEIGHT;
-import static manager.MapManager.MAP_WIDTH;
+import static map.MapManager.MAP_HEIGHT;
+import static map.MapManager.MAP_WIDTH;
 
 
 public class ImagesLoader {
