@@ -3,6 +3,7 @@ package sprite;
 
 import util.ImagesLoader;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -12,25 +13,23 @@ import static map.MapManager.MAP_WIDTH;
 public abstract class Sprite extends Rectangle{
     protected static final int GRAVITY = 3;
 
-    private static final int FLOOR_RED_PIXEL_VALUE = 250;
+    private static final int FLOOR_HEIGHT = 625;
 
-    private ImagesLoader  imagesLoader;
-    private String        imageName;
-    private BufferedImage image;
-    private boolean       isLooping;
+    private boolean       isLooping, collision = true;
     private int           animationTick, 
                           animationIndex, 
                           animationSpeed;
-    private int[][]       mapRedPixelValue;
+    private String        imageName;
+    private ImagesLoader  imagesLoader;
+    private BufferedImage image;
 
 
     public Sprite(int x, int y, int width, int height,
-                  ImagesLoader imagesLoader, String imageName, String mapName) {
+                  ImagesLoader imagesLoader, String imageName) {
         super(x, y, width, height);
         this.imagesLoader = imagesLoader;
 
         setImage(imageName);
-        loadMapRedPixelValue(mapName);
     }
 
     public void setImage(String name) {
@@ -38,11 +37,6 @@ public abstract class Sprite extends Rectangle{
         image = imagesLoader.getImage(name);
         if (image == null) System.out.println("No sprite image for " + imageName);
         isLooping = false;
-    }
-
-
-    private void loadMapRedPixelValue(String mapName) {
-        this.mapRedPixelValue = imagesLoader.getMapRedPixelValue(mapName);
     }
 
     protected void loopImage(int animationSpeed) {
@@ -69,8 +63,7 @@ public abstract class Sprite extends Rectangle{
     }
 
     protected boolean isSolid(int left, int top, int right, int bottom) {
-        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) ||
-                (mapRedPixelValue[bottom][x] == FLOOR_RED_PIXEL_VALUE));
+        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) || (bottom >= FLOOR_HEIGHT));
     }
 
     public void drawSprite(Graphics g){
@@ -81,4 +74,12 @@ public abstract class Sprite extends Rectangle{
         }
     }
 
+    public void setCollisionTimer() {
+        collision = false;
+        new Timer(200, (e) -> collision = true).start();
+    }
+
+    public boolean isCollision() {
+        return collision;
+    }
 }

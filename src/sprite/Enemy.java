@@ -13,8 +13,8 @@ public abstract class Enemy extends Sprite{
     private boolean isDie = false;
 
 
-    public Enemy(int x, int y, ImagesLoader imagesLoader, String imageName, String mapName) {
-        super(x, y, WIDTH, HEIGHT, imagesLoader, imageName, mapName);
+    public Enemy(int x, int y, ImagesLoader imagesLoader, String imageName) {
+        super(x, y, WIDTH, HEIGHT, imagesLoader, imageName);
 
         setImage(imageName);
         loopImage(20);
@@ -38,7 +38,7 @@ public abstract class Enemy extends Sprite{
     public void setDie() {
         dx = 0;
         setImage("mushroomDie");
-        new Timer(200, (e) -> isDie = true).start();
+        new Timer(10, (e) -> isDie = true).start();
     }
 
     public boolean isDie() {

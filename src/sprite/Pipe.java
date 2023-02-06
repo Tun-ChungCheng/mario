@@ -10,7 +10,7 @@ public class Pipe extends Block{
     public static final int LARGE_SIZE = 170;
 
 
-    public Pipe(int x, int y, int size, ImagesLoader imagesLoader, String mapName) {
-        super(x, y, WIDTH, size, imagesLoader, "pipe", mapName);
+    public Pipe(int x, int y, int size, ImagesLoader imagesLoader) {
+        super(x, y, WIDTH, size, imagesLoader, "pipe");
     }
 }

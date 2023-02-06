@@ -1,28 +1,24 @@
 package sprite;
 
-import util.SoundManager;
+import util.SoundsLoader;
 import util.ImagesLoader;
-
-import javax.swing.*;
 
 
 public class Mario extends Sprite {
     private static final int PLAYER_WIDTH = 48;
     private static final int PLAYER_HEIGHT = 48;
-    private static final int JUMP_SPEED = 10;
+    private static final int JUMP_SPEED = 8;
 
-    private int dx = 2, dy = 10, previoutY;
+    private int dx = 1, dy = 8;
     private boolean isUp, isRight, isDown, isLeft, isJump;
-    private boolean isFacingRight = true, isCollision = false;
-    private SoundManager soundManager;
-    public SoundManager getSoundManager() {
-        return soundManager;
+    private boolean isFacingRight = true;
+    private SoundsLoader soundsLoader;
+    public SoundsLoader getSoundManager() {
+        return soundsLoader;
     }
-    public Mario(int x, int y, ImagesLoader imagesLoader,
-                 SoundManager soundManager, String mapName) {
-        super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight", mapName);
-        previoutY = y;
-        this.soundManager = soundManager;
+    public Mario(int x, int y, ImagesLoader imagesLoader, SoundsLoader soundsLoader) {
+        super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight");
+        this.soundsLoader = soundsLoader;
     }
 
     public void updateSprite(){
@@ -68,6 +64,7 @@ public class Mario extends Sprite {
             isFacingRight = false;
             x -= dx;
         }
+
     }
 
     private void updateJumpStatus() {
@@ -76,6 +73,7 @@ public class Mario extends Sprite {
 
     public void setDie() {
         setImage("die");
+//        soundsLoader.playDieSound();
     }
 
     public void setUp(boolean up) {
@@ -102,20 +100,14 @@ public class Mario extends Sprite {
         isJump = jump;
     }
 
-    public void setNextCollisionTimer() {
-        isCollision = true;
-        new Timer(1, e -> isCollision = false).start();
+    public void stomp() {
+            new Thread(() -> y -= GRAVITY).start();
     }
 
-    public boolean isCollision() {
-        return isCollision;
-    }
-
-    public void setCollision(boolean collision) {
-        isCollision = collision;
-    }
-
-    public int getPrevioutY() {
-        return previoutY;
+    public void jumping() {
+        if(!isJump()) {
+            setUp(true);
+            soundsLoader.playJumpSound();
+        }
     }
 }

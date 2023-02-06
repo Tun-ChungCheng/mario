@@ -4,12 +4,12 @@ import javax.sound.sampled.*;
 import java.io.*;
 
 
-public class SoundManager {
+public class SoundsLoader {
     private final static String SOUND_DIR = "sounds/";
 
-    private Clip background;
+    private Clip background, jumpClip, dieClip;
 
-    public SoundManager() {
+    public SoundsLoader() {
         background = setClip(loadAudio("background"));
         background.start();
     }
@@ -37,12 +37,12 @@ public class SoundManager {
     }
 
     public void playJumpSound() {
-        Clip clip = setClip(loadAudio("jump"));
-        clip.start();
+        jumpClip = setClip(loadAudio("jump"));
+        jumpClip.start();
     }
 
     public void playDieSound() {
-        Clip dieClip = setClip(loadAudio("die"));
+        dieClip = setClip(loadAudio("die"));
         dieClip.start();
     }
 }

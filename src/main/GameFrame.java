@@ -1,19 +1,19 @@
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class GameFrame extends JFrame{
-    private GamePanel gamePanel;
+    GamePanel gamePanel;
 
     public GameFrame() {
         super("Super Mario Bro.");
 
         gamePanel = new GamePanel();
-        
-        add(gamePanel);
+        add(gamePanel, BorderLayout.CENTER);
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setResizable(false);

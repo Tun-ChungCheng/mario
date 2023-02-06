@@ -1,10 +1,9 @@
 package main;
 
-import org.w3c.dom.ls.LSOutput;
 import sprite.*;
 import util.Camera;
 import map.MapManager;
-import util.SoundManager;
+import util.SoundsLoader;
 import util.ImagesLoader;
 
 import javax.swing.*;
@@ -26,14 +25,17 @@ public class GamePanel extends JPanel implements Runnable{
     private volatile boolean running  = false;
     private volatile boolean isPaused = false;
     private volatile boolean gameOver = false;
-    private int score = 0, world = 1, level = 1, countdown = 300, live = 3;
+    private int score     = 0,
+                world     = 1,
+                level     = 1,
+                countdown = 300,
+                live      = 3;
 
-    private Mario mario;
+    private Mario             mario;
     private ArrayList<Sprite> elements;
-    private Camera camera;
-    private MapManager mapManager;
-    private FontMetrics fontMetrics;
-    private Font marioFont;
+    private Camera            camera;
+    private MapManager        mapManager;
+    private FontMetrics       fontMetrics;
 
 
     public GamePanel() {
@@ -42,18 +44,16 @@ public class GamePanel extends JPanel implements Runnable{
         requestFocus();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-        SoundManager soundManager = new SoundManager();
+        SoundsLoader soundsLoader = new SoundsLoader();
         String currentMap = "world" + world + "level" + level;
-
 
         mapManager = new MapManager(imagesLoader, currentMap);
         elements = mapManager.gameElement.elements;
         camera = new Camera();
-        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, currentMap);
+        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader);
 
         addKeyListener(new InputManager(mario));
-        marioFont = new Font(MARIO_FONT, Font.PLAIN, 24);
-        fontMetrics = this.getFontMetrics(marioFont);
+        fontMetrics = this.getFontMetrics(new Font(MARIO_FONT, Font.BOLD, 36));
     }
 
 
@@ -128,10 +128,11 @@ public class GamePanel extends JPanel implements Runnable{
 
     private void checkCollision() {
         for (Sprite element: elements) {
-            if (!mario.isCollision() && mario.intersects(element)) playerCollision(element);
+            if (mario.isCollision() && mario.intersects(element)) playerCollision(element);
             if (element instanceof Enemy) enemyCollision((Enemy) element);
         }
     }
+
     private void playerCollision(Sprite element) {
         if (element instanceof Enemy) {
             Enemy enemy = (Enemy) element;
@@ -139,7 +140,7 @@ public class GamePanel extends JPanel implements Runnable{
                 if (mario.isJump()) {
                     enemy.setDie();
                     score += 500;
-                    mario.setNextCollisionTimer();
+                    mario.stomp();
                 } else {
                     mario.setDie();
                 }
@@ -156,8 +157,9 @@ public class GamePanel extends JPanel implements Runnable{
                 if (element instanceof RedBrick || element instanceof ItemBrick) {
                     if (mario.y < block.y + block.height) mario.y = block.y + block.height;
                     if (element instanceof ItemBrick) {
+                        mario.setCollisionTimer();
+                        ((ItemBrick) element).shake();
                         score += 500;
-                        mario.setNextCollisionTimer();
                     }
                 }
                 if (element instanceof Pipe) {
@@ -188,21 +190,16 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        String title  = ("MARIO" + getWhiteSpace(30) + "WORLD" + getWhiteSpace(30) + "TIME" + getWhiteSpace(30) + "LIVES");
-        String record = ("%06d"  + getWhiteSpace(35) + "%d-%d" + getWhiteSpace(35) + "%d"   + getWhiteSpace(35) + "%d")
+        String title  = ("MARIO    WORLD    TIME    LIVES");
+        String record = ("%06d        %d-%d         %d         %d")
                 .formatted(score, world, level, countdown, live);
 
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(title)) / 2;
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
 
-        g.setFont(marioFont);
+        g.setFont(fontMetrics.getFont());
         g.drawString(title,  x + camera.getX(), y + camera.getY());
         g.drawString(record, x + camera.getX(), y + camera.getY() + fontMetrics.getHeight());
-    }
-
-    private String getWhiteSpace(int n) {
-        StringBuilder whiteSpaces = new StringBuilder();
-        return whiteSpaces.append(" ".repeat(Math.max(0, n))).toString();
     }
 
     public void resumeGame() {
@@ -215,5 +212,25 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void stopGame() {
         running = false;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getWorld() {
+        return world;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getCountdown() {
+        return countdown;
+    }
+
+    public int getLive() {
+        return live;
     }
 }
