@@ -3,31 +3,34 @@ package sprite;
 import util.SoundManager;
 import util.ImagesLoader;
 
+import javax.swing.*;
 
-public class Player extends Sprite {
+
+public class Mario extends Sprite {
     private static final int PLAYER_WIDTH = 48;
     private static final int PLAYER_HEIGHT = 48;
     private static final int JUMP_SPEED = 10;
 
-    private int dx = 2, dy = 10;
+    private int dx = 2, dy = 10, previoutY;
     private boolean isUp, isRight, isDown, isLeft, isJump;
-    private boolean isFacingRight = true;
+    private boolean isFacingRight = true, isCollision = false;
     private SoundManager soundManager;
     public SoundManager getSoundManager() {
         return soundManager;
     }
-    public Player(int x, int y, ImagesLoader imagesLoader,
-                  SoundManager soundManager, String mapName) {
+    public Mario(int x, int y, ImagesLoader imagesLoader,
+                 SoundManager soundManager, String mapName) {
         super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight", mapName);
+        previoutY = y;
         this.soundManager = soundManager;
     }
 
-    public void update(){
+    public void updateSprite(){
         updateImage();
         updatePosition();
         updateJumpStatus();
         updateFalling();
-        super.update();
+        super.updateSprite();
     }
 
     private void updateImage() {
@@ -99,4 +102,20 @@ public class Player extends Sprite {
         isJump = jump;
     }
 
+    public void setNextCollisionTimer() {
+        isCollision = true;
+        new Timer(1, e -> isCollision = false).start();
+    }
+
+    public boolean isCollision() {
+        return isCollision;
+    }
+
+    public void setCollision(boolean collision) {
+        isCollision = collision;
+    }
+
+    public int getPrevioutY() {
+        return previoutY;
+    }
 }

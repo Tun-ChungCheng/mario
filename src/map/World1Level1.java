@@ -35,6 +35,20 @@ public class World1Level1 extends GameElement {
 
         blocks.add(new Pipe(2745, 453, LARGE_SIZE, imagesLoader, "world1level1"));
 
+        blocks.add(new RedBrick(3700, 380, imagesLoader, "world1level1"));
+        blocks.add(new ItemBrick(3748, 380, imagesLoader, "world1level1"));
+        blocks.add(new RedBrick(3796, 380, imagesLoader, "world1level1"));
+
+        for (int i = 0; i < 9; i++)
+            blocks.add(new RedBrick(3844 + 48 * i, 200, imagesLoader, "world1level1"));
+
+        enemies.add(new Mushroom(3844, 168, imagesLoader, "world1level1"));
+        enemies.add(new Mushroom(3940, 168, imagesLoader, "world1level1"));
+
+        for (int i = 0; i < 3; i++)
+            blocks.add(new RedBrick(4500 + 48 * i, 200, imagesLoader, "world1level1"));
+
+
         elements.addAll(enemies);
         elements.addAll(blocks);
 

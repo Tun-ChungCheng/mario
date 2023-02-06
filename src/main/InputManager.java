@@ -1,16 +1,18 @@
 package main;
 
-import sprite.Player;
+import sprite.Mario;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
 
 public class InputManager implements KeyListener {
-    private Player player;
+    private Mario mario;
 
-    public InputManager(Player player){
-        this.player = player;
+    public InputManager(Mario mario){
+        this.mario = mario;
     }
 
     @Override
@@ -20,14 +22,15 @@ public class InputManager implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> {
-                if(!player.isJump()) {
-                    player.setUp(true);
-                    player.getSoundManager().playJumpSound();
+                if(!mario.isJump()) {
+                    mario.setUp(true);
+                    mario.getSoundManager().playJumpSound();
+
                 }
             }
-            case KeyEvent.VK_RIGHT -> player.setRight(true);
-            case KeyEvent.VK_DOWN  -> player.setDown(true);
-            case KeyEvent.VK_LEFT  -> player.setLeft(true);
+            case KeyEvent.VK_RIGHT -> mario.setRight(true);
+            case KeyEvent.VK_DOWN  -> mario.setDown(true);
+            case KeyEvent.VK_LEFT  -> mario.setLeft(true);
         }
     }
 
@@ -35,10 +38,10 @@ public class InputManager implements KeyListener {
     public void keyReleased(KeyEvent e) {
 
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> player.setUp(false);
-            case KeyEvent.VK_RIGHT -> player.setRight(false);
-            case KeyEvent.VK_DOWN  -> player.setDown(false);
-            case KeyEvent.VK_LEFT  -> player.setLeft(false);
+            case KeyEvent.VK_UP -> mario.setUp(false);
+            case KeyEvent.VK_RIGHT -> mario.setRight(false);
+            case KeyEvent.VK_DOWN  -> mario.setDown(false);
+            case KeyEvent.VK_LEFT  -> mario.setLeft(false);
         }
     }
 }

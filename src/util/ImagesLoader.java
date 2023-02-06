@@ -46,7 +46,7 @@ public class ImagesLoader {
                 if (line.startsWith("//")) continue;
 
                 ch = Character.toLowerCase(line.charAt(0));
-                if (ch == 'o') checkArgumentNumber(line);
+                if (ch == 'o') checkTwoArgument(line);
                 else if (ch == 'n') getNumberedImages(line);
                 else if (ch == 's') getStripImages(line);
                 else if (ch == 'g') getGroupImages(line);
@@ -60,7 +60,7 @@ public class ImagesLoader {
 
     // --------- load a single image -------------------------------
 
-    private void checkArgumentNumber(String line) {
+    private void checkTwoArgument(String line) {
         StringTokenizer tokens = new StringTokenizer(line);
 
         if (tokens.countTokens() != 2) System.out.println("Wrong no. of arguments for " + line);

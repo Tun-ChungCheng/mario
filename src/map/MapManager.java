@@ -32,9 +32,9 @@ public class MapManager {
         gameElement = game;
     }
 
-    public void draw(Graphics g) {
+    public void drawSprite(Graphics g) {
         g.drawImage(map, 0, 0, MAP_WIDTH, MAP_HEIGHT,null);
-        gameElement.draw(g);
+        gameElement.drawSprite(g);
     }
 
     public void update (){

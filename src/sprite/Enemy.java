@@ -20,8 +20,8 @@ public abstract class Enemy extends Sprite{
         loopImage(20);
     }
 
-    public void update() {
-        super.update();
+    public void updateSprite() {
+        super.updateSprite();
         updatePosition();
         updateFalling();
     }
@@ -31,8 +31,8 @@ public abstract class Enemy extends Sprite{
         x -= dx;
     }
 
-    public void render(Graphics g) {
-        if (!isDie) super.render(g);
+    public void drawSprite(Graphics g) {
+        if (!isDie) super.drawSprite(g);
     }
 
     public void setDie() {

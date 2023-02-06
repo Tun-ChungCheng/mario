@@ -35,10 +35,11 @@ public abstract class Sprite extends Rectangle{
 
     public void setImage(String name) {
         imageName = name;
-        image = imagesLoader.getImage(imageName);
+        image = imagesLoader.getImage(name);
         if (image == null) System.out.println("No sprite image for " + imageName);
         isLooping = false;
     }
+
 
     private void loadMapRedPixelValue(String mapName) {
         this.mapRedPixelValue = imagesLoader.getMapRedPixelValue(mapName);
@@ -59,7 +60,7 @@ public abstract class Sprite extends Rectangle{
         }
     }
 
-    public void update() {
+    public void updateSprite() {
         if (isLooping) updateTick();
     }
 
@@ -72,9 +73,7 @@ public abstract class Sprite extends Rectangle{
                 (mapRedPixelValue[bottom][x] == FLOOR_RED_PIXEL_VALUE));
     }
 
-
-
-    public void render(Graphics g){
+    public void drawSprite(Graphics g){
         if (image == null) g.fillRect(x, y, width, height);
         else {
             if (isLooping) image = imagesLoader.getImage(imageName, animationIndex);

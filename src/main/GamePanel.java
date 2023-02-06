@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.ls.LSOutput;
 import sprite.*;
 import util.Camera;
 import map.MapManager;
@@ -27,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable{
     private volatile boolean gameOver = false;
     private int score = 0, world = 1, level = 1, countdown = 300, live = 3;
 
-    private Player player;
+    private Mario mario;
     private ArrayList<Sprite> elements;
     private Camera camera;
     private MapManager mapManager;
@@ -48,9 +49,9 @@ public class GamePanel extends JPanel implements Runnable{
         mapManager = new MapManager(imagesLoader, currentMap);
         elements = mapManager.gameElement.elements;
         camera = new Camera();
-        player = new Player(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, currentMap);
+        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundManager, currentMap);
 
-        addKeyListener(new InputManager(player));
+        addKeyListener(new InputManager(mario));
         marioFont = new Font(MARIO_FONT, Font.PLAIN, 24);
         fontMetrics = this.getFontMetrics(marioFont);
     }
@@ -118,17 +119,52 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
-            camera.update(player.x, player.y);
-            player.update();
-            elements.forEach(element -> element.update());
+            camera.update(mario.x, mario.y);
+            mario.updateSprite();
+            elements.forEach(element -> element.updateSprite());
             checkCollision();
         }
     }
 
     private void checkCollision() {
         for (Sprite element: elements) {
+            if (!mario.isCollision() && mario.intersects(element)) playerCollision(element);
             if (element instanceof Enemy) enemyCollision((Enemy) element);
-            if (player.intersects(element)) playerCollision(element);
+        }
+    }
+    private void playerCollision(Sprite element) {
+        if (element instanceof Enemy) {
+            Enemy enemy = (Enemy) element;
+            if (!enemy.isDie()) {
+                if (mario.isJump()) {
+                    enemy.setDie();
+                    score += 500;
+                    mario.setNextCollisionTimer();
+                } else {
+                    mario.setDie();
+                }
+            }
+        }
+        if (element instanceof Block) {
+            Block block = (Block) element;
+            if (mario.y < block.y) {
+                mario.y = block.y - mario.height;
+                mario.setJump(false);
+            }
+
+            if (mario.y > block.y) {
+                if (element instanceof RedBrick || element instanceof ItemBrick) {
+                    if (mario.y < block.y + block.height) mario.y = block.y + block.height;
+                    if (element instanceof ItemBrick) {
+                        score += 500;
+                        mario.setNextCollisionTimer();
+                    }
+                }
+                if (element instanceof Pipe) {
+                    if (mario.x < block.x) mario.x = block.x - mario.width;
+                    else mario.x = block.x + block.width;
+                }
+            }
         }
     }
 
@@ -143,39 +179,10 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    private void playerCollision(Sprite element) {
-        if (element instanceof Enemy) {
-            Enemy enemy = (Enemy) element;
-            if (!enemy.isDie()) {
-                if (player.isJump()) enemy.setDie();
-                if (!enemy.isDie()) player.setDie();
-            }
-        }
-        if (element instanceof Block) {
-            Block block = (Block) element;
-            if (player.y < block.y) {
-                player.y = block.y - player.height;
-                player.setJump(false);
-            }
-
-            if (element instanceof RedBrick || element instanceof ItemBrick) {
-                if (player.y > block.y)
-                    if (player.y < block.y + block.height) player.y = block.y + block.height;
-            }
-
-            if (element instanceof Pipe) {
-                if (player.y > block.y) {
-                    if (player.x < block.x) player.x = block.x - player.width;
-                    else player.x = block.x + block.width;
-                }
-            }
-        }
-    }
-
     public void gameRender(Graphics g) {
         camera.render(g);
-        mapManager.draw(g);
-        player.render(g);
+        mapManager.drawSprite(g);
+        mario.drawSprite(g);
         reportStatus(g);
 
     }
