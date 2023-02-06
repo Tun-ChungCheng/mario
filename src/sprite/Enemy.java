@@ -2,7 +2,6 @@ package sprite;
 
 import util.ImagesLoader;
 
-import javax.swing.*;
 import java.awt.*;
 
 public abstract class Enemy extends Sprite{
@@ -38,7 +37,7 @@ public abstract class Enemy extends Sprite{
     public void setDie() {
         dx = 0;
         setImage("mushroomDie");
-        new Timer(10, (e) -> isDie = true).start();
+        isDie = true;
     }
 
     public boolean isDie() {

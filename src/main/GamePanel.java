@@ -1,13 +1,22 @@
 package main;
 
-import sprite.*;
+import sprite.Block;
+import sprite.Enemy;
+import sprite.ItemBrick;
+import sprite.Mario;
+import sprite.Pipe;
+import sprite.RedBrick;
+import sprite.Sprite;
 import util.Camera;
 import map.MapManager;
 import util.SoundsLoader;
 import util.ImagesLoader;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 
@@ -121,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable{
         if (!gameOver && !isPaused) {
             camera.update(mario.x, mario.y);
             mario.updateSprite();
-            elements.forEach(element -> element.updateSprite());
+            elements.forEach(Sprite::updateSprite);
             checkCollision();
         }
     }
@@ -134,20 +143,18 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void playerCollision(Sprite element) {
-        if (element instanceof Enemy) {
-            Enemy enemy = (Enemy) element;
+        if (element instanceof Enemy enemy) {
             if (!enemy.isDie()) {
                 if (mario.isJump()) {
                     enemy.setDie();
                     score += 500;
-                    mario.stomp();
+                    mario.y -= mario.height;
                 } else {
                     mario.setDie();
                 }
             }
         }
-        if (element instanceof Block) {
-            Block block = (Block) element;
+        if (element instanceof Block block) {
             if (mario.y < block.y) {
                 mario.y = block.y - mario.height;
                 mario.setJump(false);
@@ -172,8 +179,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     private void enemyCollision(Enemy enemy) {
         for (Sprite element: elements) {
-            if (element instanceof Block && enemy.intersects(element)) {
-                Block block = (Block) element;
+            if (element instanceof Block block && enemy.intersects(element)) {
                 if (enemy.x < block.x) enemy.x = Math.min(enemy.x, block.x - enemy.width);
                 else enemy.x = Math.max(enemy.x, block.x + block.width);
                 enemy.changeDirection();
@@ -190,16 +196,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        String title  = ("MARIO    WORLD    TIME    LIVES");
-        String record = ("%06d        %d-%d         %d         %d")
+        String record  = ("MARIO:%06d    WORLD:%d-%d    TIME:%d     LIVES:%d")
                 .formatted(score, world, level, countdown, live);
-
-        int x = (PANEL_WIDTH - fontMetrics.stringWidth(title)) / 2;
+        int x = (PANEL_WIDTH - fontMetrics.stringWidth(record)) / 2;
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
-
         g.setFont(fontMetrics.getFont());
-        g.drawString(title,  x + camera.getX(), y + camera.getY());
-        g.drawString(record, x + camera.getX(), y + camera.getY() + fontMetrics.getHeight());
+        g.drawString(record, x + camera.getX(), y + camera.getY());
     }
 
     public void resumeGame() {
