@@ -1,13 +1,9 @@
 package main;
 
-import manager.Camera;
-import manager.InputManager;
+import sprite.*;
+import util.Camera;
 import map.MapManager;
-import sprite.Block;
-import sprite.Enemy;
-import sprite.Player;
-import manager.SoundManager;
-import sprite.Sprite;
+import util.SoundManager;
 import util.ImagesLoader;
 
 import javax.swing.*;
@@ -23,7 +19,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SPAWN_X = 200;
     private static final int SPAWN_Y = 500;
     private static final String IMAGES_INFO = "imagesInfo.txt";
-    private static final String MARIO_FONT = "C:\\Users\\User\\Desktop\\super_mario_bros_clone\\font\\mario-font.ttf";
+    private static final String MARIO_FONT = "font\\mario-font.ttf";
 
     private Thread animator;
     private volatile boolean running  = false;
@@ -131,30 +127,48 @@ public class GamePanel extends JPanel implements Runnable{
 
     private void checkCollision() {
         for (Sprite element: elements) {
-            String superClassName = element.getClass().getSuperclass().getSimpleName();
-            switch (superClassName) {
-                case "Enemy" -> {
-                    Enemy enemy = (Enemy) element;
-                    if (!enemy.isDie() && player.intersects(enemy)) {
-                        if (player.isJump()) enemy.setDie();
-                        if (!enemy.isDie()) player.setDie();
-                    }
-                }
-                case "Block" -> {
-                    Block block = (Block) element;
-                    if (player.intersects(block)) {
-                        if (player.y < block.y) {
-                            player.y = block.y - player.height;
-                            player.setJump(false);
-                        }
-                        if (player.y > block.y) {
-                            if (player.y <= block.y + block.height) player.y = block.y + block.height;
-                        }
-                    }
+            if (element instanceof Enemy) enemyCollision((Enemy) element);
+            if (player.intersects(element)) playerCollision(element);
+        }
+    }
 
-                }
+    private void enemyCollision(Enemy enemy) {
+        for (Sprite element: elements) {
+            if (element instanceof Block && enemy.intersects(element)) {
+                Block block = (Block) element;
+                if (enemy.x < block.x) enemy.x = Math.min(enemy.x, block.x - enemy.width);
+                else enemy.x = Math.max(enemy.x, block.x + block.width);
+                enemy.changeDirection();
+            }
+        }
+    }
+
+    private void playerCollision(Sprite element) {
+        if (element instanceof Enemy) {
+            Enemy enemy = (Enemy) element;
+            if (!enemy.isDie()) {
+                if (player.isJump()) enemy.setDie();
+                if (!enemy.isDie()) player.setDie();
+            }
+        }
+        if (element instanceof Block) {
+            Block block = (Block) element;
+            if (player.y < block.y) {
+                player.y = block.y - player.height;
+                player.setJump(false);
             }
 
+            if (element instanceof RedBrick || element instanceof ItemBrick) {
+                if (player.y > block.y)
+                    if (player.y < block.y + block.height) player.y = block.y + block.height;
+            }
+
+            if (element instanceof Pipe) {
+                if (player.y > block.y) {
+                    if (player.x < block.x) player.x = block.x - player.width;
+                    else player.x = block.x + block.width;
+                }
+            }
         }
     }
 

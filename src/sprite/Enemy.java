@@ -27,7 +27,7 @@ public abstract class Enemy extends Sprite{
     }
 
     private void updatePosition() {
-        if (isSolid(x - dx, y, x + width + dx, y + height)) dx *= -1;
+        if (isSolid(x - dx, y, x + width + dx, y + height)) changeDirection();
         x -= dx;
     }
 
@@ -43,5 +43,9 @@ public abstract class Enemy extends Sprite{
 
     public boolean isDie() {
         return isDie;
+    }
+
+    public void changeDirection () {
+        dx *= -1;
     }
 }

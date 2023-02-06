@@ -1,4 +1,4 @@
-package manager;
+package util;
 
 import main.GamePanel;
 

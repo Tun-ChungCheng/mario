@@ -72,6 +72,8 @@ public abstract class Sprite extends Rectangle{
                 (mapRedPixelValue[bottom][x] == FLOOR_RED_PIXEL_VALUE));
     }
 
+
+
     public void render(Graphics g){
         if (image == null) g.fillRect(x, y, width, height);
         else {

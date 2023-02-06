@@ -1,6 +1,6 @@
 package sprite;
 
-import manager.SoundManager;
+import util.SoundManager;
 import util.ImagesLoader;
 
 
@@ -9,7 +9,7 @@ public class Player extends Sprite {
     private static final int PLAYER_HEIGHT = 48;
     private static final int JUMP_SPEED = 10;
 
-    private int dx = 1, dy = 10;
+    private int dx = 2, dy = 10;
     private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
     private SoundManager soundManager;
