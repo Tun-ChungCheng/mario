@@ -13,7 +13,7 @@ import static map.MapManager.MAP_WIDTH;
 public abstract class Sprite extends Rectangle{
     protected static final int GRAVITY = 3;
 
-    private static final int FLOOR_HEIGHT = 625;
+    protected static final int FLOOR_HEIGHT = 625;
 
     private boolean       isLooping, collision;
     private int           imageTick,
@@ -58,10 +58,6 @@ public abstract class Sprite extends Rectangle{
         if (isLooping) updateTick();
     }
 
-    protected void updateFalling() {
-        if (!isSolid(x, y, x + width,y + height + GRAVITY)) y += GRAVITY;
-    }
-
     protected boolean isSolid(int left, int top, int right, int bottom) {
         return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) || (bottom >= FLOOR_HEIGHT));
     }
@@ -72,14 +68,5 @@ public abstract class Sprite extends Rectangle{
             if (isLooping) image = imagesLoader.getImage(imageName, imageIndex);
             g.drawImage(image, x, y, width, height, null);
         }
-    }
-
-    public void setCollisionTimer() {
-        collision = true;
-        new Timer(500, (e) -> collision = false).start();
-    }
-
-    public boolean isCollision() {
-        return collision;
     }
 }

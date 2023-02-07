@@ -20,7 +20,7 @@ public class InputManager implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> mario.jumping();
+            case KeyEvent.VK_UP -> mario.setUp(true);
             case KeyEvent.VK_RIGHT -> mario.setRight(true);
             case KeyEvent.VK_DOWN  -> mario.setDown(true);
             case KeyEvent.VK_LEFT  -> mario.setLeft(true);

@@ -15,11 +15,11 @@ import java.util.ArrayList;
 public class Mario extends Sprite {
     private static final int WIDTH = 48;
     private static final int HEIGHT = 48;
-    private static final int MAX_UP_STEPS = 8;
+    private static final int MAX_UP_STEPS = 50;
 
-    private int dx, dy, upCount, vertMoveMode;
+    private int dx, dy, upCount;
     private boolean isUp, isRight, isDown, isLeft, isJump;
-    private boolean isFacingRight = true;
+    private boolean isFacingRight = true, maxUp;
     private ArrayList<Sprite> mapElements;
     private SoundsLoader soundsLoader;
 
@@ -36,7 +36,7 @@ public class Mario extends Sprite {
         super.updateSprite();
         updateImage();
         updatePosition();
-        updateJumpStatus();
+        updateRising();
         updateFalling();
         checkCollision();
     }
@@ -61,34 +61,42 @@ public class Mario extends Sprite {
     }
 
     private void updatePosition() {
-        if (isUp && !isSolid(x, y - dy, x + width,y + height)) {
+        if (isUp && !maxUp) {
             y -= dy;
-            if (isRight && !isSolid(x + dx, y - dy, x + width,y + height)) {
-                x += (dx / 2);
-            }
-            if (isLeft && !isSolid(x - dx, y - dy, x + width,y + height)) {
-                x -= (dx / 2);
-            }
+            if (isRight) x += (dx / 2);
+            if (isLeft) x -= (dx / 2);
         }
-        if (isRight && !isSolid(x, y, x + width + dx,y + height)) {
+        if (isRight) {
             isFacingRight = true;
             x += dx;
         }
-        if (isLeft && !isSolid(x - dx, y, x + width,y + height)) {
+        if (isLeft) {
             isFacingRight = false;
             x -= dx;
         }
     }
 
-    private void updateJumpStatus() {
-        if (upCount == MAX_UP_STEPS) {
-            isJump = false;
-            upCount = 0;
-        } else {
-            upCount++;
+    private void updateRising() {
+        if (isUp){
+            if (upCount == MAX_UP_STEPS) {
+                maxUp = true;
+                upCount = 0;
+            } else {
+                upCount++;
+                isJump = true;
+            }
         }
-        System.out.println(upCount);
-        isJump = !isSolid(x, y, x + width, y + height + GRAVITY);
+    }
+
+    private void updateFalling() {
+        if (y + height + GRAVITY < FLOOR_HEIGHT) y += GRAVITY;
+        else resetJump();
+    }
+
+    private void resetJump() {
+        upCount = 0;
+        maxUp = false;
+        isJump = false;
     }
 
     private void checkCollision() {
@@ -102,7 +110,7 @@ public class Mario extends Sprite {
 
     private void enemyCollision(Enemy enemy) {
         if (!enemy.isDie()) {
-            if (isJump()) {
+            if (isJump) {
                 enemy.setDie();
 //                score += 500;
                 y -= height;
@@ -113,7 +121,7 @@ public class Mario extends Sprite {
     private void blockCollision(Block block) {
         if (y < block.y) {
             y = block.y - height;
-            setJump(false);
+            resetJump();
         }
 
         if (y > block.y) {
@@ -131,11 +139,6 @@ public class Mario extends Sprite {
             }
         }
     }
-
-
-
-
-
 
 
     public void setDie() {
@@ -161,18 +164,4 @@ public class Mario extends Sprite {
         isLeft = left;
     }
 
-    public boolean isJump() {
-        return isJump;
-    }
-
-    public void setJump(boolean jump) {
-        isJump = jump;
-    }
-
-    public void jumping() {
-        if(!isJump()) {
-            setUp(true);
-            soundsLoader.playJumpSound();
-        }
-    }
 }

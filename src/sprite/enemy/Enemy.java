@@ -29,8 +29,16 @@ public abstract class Enemy extends Sprite {
         x -= dx;
     }
 
+    private void updateFalling() {
+        if (y + height + GRAVITY < FLOOR_HEIGHT) y += GRAVITY;
+    }
+
     public void drawSprite(Graphics g) {
         if (!isDie) super.drawSprite(g);
+    }
+
+    public void changeDirection () {
+        dx *= -1;
     }
 
     public void setDie() {
@@ -43,7 +51,5 @@ public abstract class Enemy extends Sprite {
         return isDie;
     }
 
-    public void changeDirection () {
-        dx *= -1;
-    }
+
 }
