@@ -1,13 +1,12 @@
 package sprite;
 
-import main.GamePanel;
 import map.MapManager;
 import sprite.block.Block;
 import sprite.block.ItemBrick;
 import sprite.block.Pipe;
 import sprite.block.RedBrick;
 import sprite.enemy.Enemy;
-import util.SoundsLoader;
+import util.ClipsLoader;
 import util.ImagesLoader;
 
 import java.util.ArrayList;
@@ -20,21 +19,19 @@ public class Mario extends Sprite {
 
     private int dx, dy, upCount, score;
     private boolean isUp, isRight, isDown, isLeft, isJump,
-                    isFacingRight, maxUp;
+                    isFacingRight, maxUp, isDie;
     private ArrayList<Sprite> mapElements;
-    private SoundsLoader      soundsLoader;
-    private GamePanel         gamePanel;
+    private ClipsLoader clipsLoader;
 
 
     public Mario(int x, int y, ImagesLoader imagesLoader,
-                 SoundsLoader soundsLoader, MapManager mapManager, GamePanel gamePanel) {
+                 ClipsLoader clipsLoader, MapManager mapManager) {
         super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight");
-        this.soundsLoader = soundsLoader;
+        this.clipsLoader = clipsLoader;
         this.mapElements = mapManager.getMapElements();
-        this.gamePanel = gamePanel;
 
         dx = 1; dy = 8; upCount = 0; score = 0;
-        isFacingRight = true;
+        isFacingRight = true; isDie = false;
     }
 
     public void updateSprite(){
@@ -67,6 +64,7 @@ public class Mario extends Sprite {
 
     private void updatePosition() {
         if (isUp && !maxUp) {
+            clipsLoader.play("jump", false);
             y -= dy;
             if (isRight) x += (dx / 2);
             if (isLeft) x -= (dx / 2);
@@ -117,6 +115,7 @@ public class Mario extends Sprite {
         if (!enemy.isDie()) {
             if (isJump) {
                 enemy.die();
+                clipsLoader.play("stomp", false);
                 y -= height;
                 score += 100;
             } else die();
@@ -125,8 +124,9 @@ public class Mario extends Sprite {
 
     private void die() {
         setImage("die");
-        gamePanel.setGameOver(true);
-//        soundsLoader.playDieSound();
+        clipsLoader.stop("background");
+        clipsLoader.play("die", false);
+        isDie = true;
     }
 
     private void blockCollision(Block block) {
@@ -140,6 +140,7 @@ public class Mario extends Sprite {
                 if (y < block.y + block.height) y = block.y + block.height;
                 if (block instanceof ItemBrick && !((ItemBrick) block).isHit()) {
                     ((ItemBrick) block).shake();
+                    clipsLoader.play("coin", false);
                     score += 200;
                 }
             }
@@ -170,5 +171,9 @@ public class Mario extends Sprite {
 
     public int getScore() {
         return score;
+    }
+
+    public boolean isDie() {
+        return isDie;
     }
 }

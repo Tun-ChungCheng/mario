@@ -3,7 +3,7 @@ package main;
 import sprite.Mario;
 import util.Camera;
 import map.MapManager;
-import util.SoundsLoader;
+import util.ClipsLoader;
 import util.ImagesLoader;
 
 import javax.swing.JPanel;
@@ -18,6 +18,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SPAWN_X = 200;
     private static final int SPAWN_Y = 500;
     private static final String IMAGES_INFO = "imagesInfo.txt";
+    private static final String SOUNDS_INFO = "soundsInfo.txt";
     private static final String FONT_DIR = "font/mario-font.ttf";
 
     private Thread animator;
@@ -40,12 +41,13 @@ public class GamePanel extends JPanel implements Runnable{
         requestFocus();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-        SoundsLoader soundsLoader = new SoundsLoader();
+        ClipsLoader clipsLoader = new ClipsLoader(SOUNDS_INFO);
+        clipsLoader.play("background", true);
         String currentMap = "world" + world + "level" + level;
 
         camera = new Camera();
         mapManager = new MapManager(imagesLoader, currentMap);
-        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader, mapManager, this);
+        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
 
         addKeyListener(new InputManager(mario));
         fontMetrics = this.getFontMetrics(new Font(FONT_DIR, Font.BOLD, 36));
@@ -114,6 +116,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
+            if (mario.isDie()) gameOver = true;
             camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();
             mapManager.updateSprite();
@@ -150,7 +153,4 @@ public class GamePanel extends JPanel implements Runnable{
         g.drawString(message, x, y);
     }
 
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
 }

@@ -1,0 +1,14 @@
+
+// mario clips
+
+background background.wav
+die die.wav
+jump jump.wav
+stomp stomp.wav
+
+// block clip
+
+coin coin.wav
+
+
+gameOver gameOver.wav
