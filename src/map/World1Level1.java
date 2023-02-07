@@ -1,11 +1,16 @@
 package map;
 
-import sprite.*;
+import sprite.block.Block;
+import sprite.block.ItemBrick;
+import sprite.block.Pipe;
+import sprite.block.RedBrick;
+import sprite.enemy.Enemy;
+import sprite.enemy.Mushroom;
 import util.ImagesLoader;
 
 import java.util.ArrayList;
 
-import static sprite.Pipe.*;
+import static sprite.block.Pipe.*;
 
 public class World1Level1 extends GameElement {
     public World1Level1(ImagesLoader imagesLoader) {

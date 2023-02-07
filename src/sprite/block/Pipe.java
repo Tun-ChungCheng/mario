@@ -1,8 +1,8 @@
-package sprite;
+package sprite.block;
 
 import util.ImagesLoader;
 
-public class Pipe extends Block{
+public class Pipe extends Block {
     private static final int WIDTH = 96;
 
     public static final int SMALL_SIZE = 96;

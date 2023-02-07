@@ -1,15 +1,12 @@
 package util;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import static map.MapManager.MAP_HEIGHT;
-import static map.MapManager.MAP_WIDTH;
 
 
 public class ImagesLoader {
@@ -28,14 +25,6 @@ public class ImagesLoader {
     }
 
     private void loadImagesFile(String imagesInfo) {
-        /* Formats:
-            o <fnm>                     // a single image
-            n <fnm*.ext> <number>       // a numbered sequence of images
-            s <fnm> <number>            // an images strip
-            g <name> <fnm> [ <fnm> ]*   // a group of images
-
-            and blank lines and comment lines.
-        */
         String imagesInfoPath = IMAGE_DIR + imagesInfo;
         System.out.println("Reading file: " + imagesInfoPath);
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(imagesInfoPath))) {
@@ -46,10 +35,8 @@ public class ImagesLoader {
                 if (line.startsWith("//")) continue;
 
                 ch = Character.toLowerCase(line.charAt(0));
-                if (ch == 'o') checkTwoArgument(line);
-                else if (ch == 'n') getNumberedImages(line);
-                else if (ch == 's') getStripImages(line);
-                else if (ch == 'g') getGroupImages(line);
+                if (ch == 'o') checkIfTwoArguments(line);
+                else if (ch == 's') checkIfThreeArguments(line);
                 else System.out.println("Do not recognize line: " + line);
             }
         } catch (IOException e) {
@@ -60,7 +47,7 @@ public class ImagesLoader {
 
     // --------- load a single image -------------------------------
 
-    private void checkTwoArgument(String line) {
+    private void checkIfTwoArguments(String line) {
         StringTokenizer tokens = new StringTokenizer(line);
 
         if (tokens.countTokens() != 2) System.out.println("Wrong no. of arguments for " + line);
@@ -97,13 +84,9 @@ public class ImagesLoader {
         } else return filename.substring(0, dotPosition);
     }
 
-    // --------- load numbered images -------------------------------
-
-    private void getNumberedImages(String line) {}
-
     // --------- load image strip -------------------------------
 
-    private void getStripImages(String line) {
+    private void checkIfThreeArguments(String line) {
         StringTokenizer tokens = new StringTokenizer(line);
 
         if (tokens.countTokens() != 3) System.out.println("Wrong no. of arguments for " + line);
@@ -142,15 +125,6 @@ public class ImagesLoader {
         return loadCount;
     }
 
-
-    
-
-	// ------ grouped filename seq. of images ---------
-
-    private void getGroupImages(String line) {}
-
-
-
     // ------------------- Image Input ------------------
 
     public BufferedImage loadImage(String filename) {
@@ -185,7 +159,6 @@ public class ImagesLoader {
 		}
 		return strip;
     }
-
 
     // ------------------ access methods -------------------
 
@@ -224,26 +197,5 @@ public class ImagesLoader {
         }
 
         return imagesList.size();
-    }
-
-    public int[][] getMapRedPixelValue(String imageName) {
-        BufferedImage image = imagesMap.get(imageName).get(0);
-        if (image == null) {
-            System.out.println("No image(s) stored under " + imageName);
-            return null;
-        }
-
-        int[][] map = new int[MAP_HEIGHT][MAP_WIDTH];
-        for (int i = 0; i < MAP_HEIGHT; i++) {
-            for (int j = 0; j < MAP_WIDTH; j++) {
-                Color color = new Color(image.getRGB(j, i));
-                if (color.getRed() == 255) {
-                    map[i][j] = 1;
-                }
-                else map[i][j] = color.getRed();
-            }
-        }
-
-        return map;
     }
 }

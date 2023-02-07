@@ -1,8 +1,8 @@
-package sprite;
+package sprite.block;
 
 import util.ImagesLoader;
 
-public class RedBrick extends Block{
+public class RedBrick extends Block {
     private static final int WIDTH = 48;
     private static final int HEIGHT = 48;
 

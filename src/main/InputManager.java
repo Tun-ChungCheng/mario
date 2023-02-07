@@ -2,7 +2,6 @@ package main;
 
 import sprite.Mario;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -30,7 +29,6 @@ public class InputManager implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> mario.setUp(false);
             case KeyEvent.VK_RIGHT -> mario.setRight(false);

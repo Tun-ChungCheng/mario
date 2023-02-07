@@ -1,31 +1,44 @@
 package sprite;
 
+import map.MapManager;
+import sprite.block.Block;
+import sprite.block.ItemBrick;
+import sprite.block.Pipe;
+import sprite.block.RedBrick;
+import sprite.enemy.Enemy;
 import util.SoundsLoader;
 import util.ImagesLoader;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 
 public class Mario extends Sprite {
     private static final int WIDTH = 48;
     private static final int HEIGHT = 48;
+    private static final int MAX_UP_STEPS = 8;
 
-    private int dx = 1, dy = 8, jumpHeight = 20;
+    private int dx, dy, upCount, vertMoveMode;
     private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
+    private ArrayList<Sprite> mapElements;
     private SoundsLoader soundsLoader;
 
-    public Mario(int x, int y, ImagesLoader imagesLoader, SoundsLoader soundsLoader) {
+
+    public Mario(int x, int y, ImagesLoader imagesLoader, SoundsLoader soundsLoader, MapManager mapManager) {
         super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight");
         this.soundsLoader = soundsLoader;
+        this.mapElements = mapManager.getMapElements();
+
+        dx = 1; dy = 8; upCount = 0;
     }
 
     public void updateSprite(){
+        super.updateSprite();
         updateImage();
         updatePosition();
         updateJumpStatus();
-        checkIfFalling();
-        super.updateSprite();
+        updateFalling();
+        checkCollision();
     }
 
     private void updateImage() {
@@ -68,8 +81,62 @@ public class Mario extends Sprite {
     }
 
     private void updateJumpStatus() {
+        if (upCount == MAX_UP_STEPS) {
+            isJump = false;
+            upCount = 0;
+        } else {
+            upCount++;
+        }
+        System.out.println(upCount);
         isJump = !isSolid(x, y, x + width, y + height + GRAVITY);
     }
+
+    private void checkCollision() {
+        for (Sprite element: mapElements) {
+            if (this.intersects(element)) {
+                if (element instanceof Enemy enemy) enemyCollision(enemy);
+                if (element instanceof Block block) blockCollision(block);
+            }
+        }
+    }
+
+    private void enemyCollision(Enemy enemy) {
+        if (!enemy.isDie()) {
+            if (isJump()) {
+                enemy.setDie();
+//                score += 500;
+                y -= height;
+            } else setDie();
+        }
+    }
+
+    private void blockCollision(Block block) {
+        if (y < block.y) {
+            y = block.y - height;
+            setJump(false);
+        }
+
+        if (y > block.y) {
+            if (block instanceof RedBrick || block instanceof ItemBrick) {
+                if (y < block.y + block.height) y = block.y + block.height;
+                if (block instanceof ItemBrick) {
+                    ((ItemBrick) block).shake();
+//                    score += 500;
+                }
+            }
+
+            if (block instanceof Pipe) {
+                if (x < block.x) x = block.x - width;
+                else x = block.x + block.width;
+            }
+        }
+    }
+
+
+
+
+
+
 
     public void setDie() {
         setImage("die");

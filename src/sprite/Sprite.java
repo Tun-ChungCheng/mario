@@ -58,7 +58,7 @@ public abstract class Sprite extends Rectangle{
         if (isLooping) updateTick();
     }
 
-    protected void checkIfFalling() {
+    protected void updateFalling() {
         if (!isSolid(x, y, x + width,y + height + GRAVITY)) y += GRAVITY;
     }
 

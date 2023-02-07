@@ -17,4 +17,5 @@ o mushroomDie.png
 // block's images
 o redBrick.png
 o itemBrick.png
+o emptyBrick.png
 o pipe.png

@@ -1,12 +1,6 @@
 package main;
 
-import sprite.Block;
-import sprite.Enemy;
-import sprite.ItemBrick;
 import sprite.Mario;
-import sprite.Pipe;
-import sprite.RedBrick;
-import sprite.Sprite;
 import util.Camera;
 import map.MapManager;
 import util.SoundsLoader;
@@ -17,7 +11,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 
 public class GamePanel extends JPanel implements Runnable{
@@ -39,7 +32,6 @@ public class GamePanel extends JPanel implements Runnable{
                 level     = 1,
                 countdown = 300;
     private Mario             mario;
-    private ArrayList<Sprite> elements;
     private Camera            camera;
     private MapManager        mapManager;
     private FontMetrics       fontMetrics;
@@ -54,10 +46,9 @@ public class GamePanel extends JPanel implements Runnable{
         SoundsLoader soundsLoader = new SoundsLoader();
         String currentMap = "world" + world + "level" + level;
 
-        mapManager = new MapManager(imagesLoader, currentMap);
-        elements = mapManager.gameElement.elements;
         camera = new Camera();
-        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader);
+        mapManager = new MapManager(imagesLoader, currentMap);
+        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader, mapManager);
 
         addKeyListener(new InputManager(mario));
         fontMetrics = this.getFontMetrics(new Font(MARIO_FONT, Font.BOLD, 36));
@@ -126,62 +117,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
-            camera.update(mario.x, mario.y);
+            camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();
-            elements.forEach(Sprite::updateSprite);
-            checkCollision();
-        }
-    }
-
-    private void checkCollision() {
-        for (Sprite element: elements) {
-            if (mario.intersects(element)) playerCollision(element);
-            if (element instanceof Enemy) enemyCollision((Enemy) element);
-        }
-    }
-
-    private void playerCollision(Sprite element) {
-        if (element instanceof Enemy enemy) {
-            if (!enemy.isDie()) {
-                if (mario.isJump()) {
-                    enemy.setDie();
-                    score += 500;
-                    mario.y -= mario.height;
-                } else {
-                    mario.setDie();
-                }
-            }
-        }
-        if (element instanceof Block block) {
-            if (mario.y < block.y) {
-                mario.y = block.y - mario.height;
-                mario.setJump(false);
-            }
-
-            if (mario.y > block.y) {
-                if (element instanceof RedBrick || element instanceof ItemBrick) {
-                    if (mario.y < block.y + block.height) mario.y = block.y + block.height;
-                    if (element instanceof ItemBrick) {
-//                        mario.setCollisionTimer();
-                        ((ItemBrick) element).shake();
-                        score += 500;
-                    }
-                }
-                if (element instanceof Pipe) {
-                    if (mario.x < block.x) mario.x = block.x - mario.width;
-                    else mario.x = block.x + block.width;
-                }
-            }
-        }
-    }
-
-    private void enemyCollision(Enemy enemy) {
-        for (Sprite element: elements) {
-            if (element instanceof Block block && enemy.intersects(element)) {
-                if (enemy.x < block.x) enemy.x = Math.min(enemy.x, block.x - enemy.width);
-                else enemy.x = Math.max(enemy.x, block.x + block.width);
-                enemy.changeDirection();
-            }
+            mapManager.updateSprite();
         }
     }
 
@@ -190,7 +128,7 @@ public class GamePanel extends JPanel implements Runnable{
         mapManager.drawSprite(g);
         mario.drawSprite(g);
         reportStatus(g);
-
+        if (gameOver) {}
     }
 
     private void reportStatus(Graphics g) {
@@ -212,22 +150,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void stopGame() {
         running = false;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public int getWorld() {
-        return world;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getCountdown() {
-        return countdown;
     }
 
 }

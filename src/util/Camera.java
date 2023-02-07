@@ -15,8 +15,7 @@ public class Camera {
     private int offsetMinX = 0;
     private int offsetMinY = 0;
 
-
-    public void update(int playerX, int playerY) {
+    public void updatePosition(int playerX, int playerY) {
         x = playerX - (GamePanel.PANEL_WIDTH / 4);
         y = playerY - (GamePanel.PANEL_HEIGHT / 2);
 
