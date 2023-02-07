@@ -22,7 +22,7 @@ public abstract class Enemy extends Sprite{
     public void updateSprite() {
         super.updateSprite();
         updatePosition();
-        updateFalling();
+        checkIfFalling();
     }
 
     private void updatePosition() {
@@ -36,8 +36,8 @@ public abstract class Enemy extends Sprite{
 
     public void setDie() {
         dx = 0;
-        setImage("mushroomDie");
         isDie = true;
+        setImage("mushroomDie");
     }
 
     public boolean isDie() {

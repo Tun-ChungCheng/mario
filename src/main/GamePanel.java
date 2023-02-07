@@ -37,9 +37,7 @@ public class GamePanel extends JPanel implements Runnable{
     private int score     = 0,
                 world     = 1,
                 level     = 1,
-                countdown = 300,
-                live      = 3;
-
+                countdown = 300;
     private Mario             mario;
     private ArrayList<Sprite> elements;
     private Camera            camera;
@@ -137,7 +135,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     private void checkCollision() {
         for (Sprite element: elements) {
-            if (mario.isCollision() && mario.intersects(element)) playerCollision(element);
+            if (mario.intersects(element)) playerCollision(element);
             if (element instanceof Enemy) enemyCollision((Enemy) element);
         }
     }
@@ -164,7 +162,7 @@ public class GamePanel extends JPanel implements Runnable{
                 if (element instanceof RedBrick || element instanceof ItemBrick) {
                     if (mario.y < block.y + block.height) mario.y = block.y + block.height;
                     if (element instanceof ItemBrick) {
-                        mario.setCollisionTimer();
+//                        mario.setCollisionTimer();
                         ((ItemBrick) element).shake();
                         score += 500;
                     }
@@ -196,8 +194,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        String record  = ("MARIO:%06d    WORLD:%d-%d    TIME:%d     LIVES:%d")
-                .formatted(score, world, level, countdown, live);
+        String record  = ("MARIO:%06d    WORLD:%d-%d    TIME:%d")
+                .formatted(score, world, level, countdown);
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(record)) / 2;
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
         g.setFont(fontMetrics.getFont());
@@ -232,7 +230,4 @@ public class GamePanel extends JPanel implements Runnable{
         return countdown;
     }
 
-    public int getLive() {
-        return live;
-    }
 }

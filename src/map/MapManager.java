@@ -37,7 +37,4 @@ public class MapManager {
         gameElement.drawSprite(g);
     }
 
-    public void update (){
-
-    }
 }

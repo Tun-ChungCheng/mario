@@ -14,13 +14,13 @@ public class ItemBrick extends Block{
 
     public void shake() {
         new Thread(() -> {
-            y -= 20;
+            y -= 10;
             try {
-                Thread.sleep(10);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            y += 20;
+            y += 10;
         }).start();
     }
 }

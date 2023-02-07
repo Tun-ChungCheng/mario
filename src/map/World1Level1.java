@@ -48,6 +48,33 @@ public class World1Level1 extends GameElement {
         for (int i = 0; i < 3; i++)
             blocks.add(new RedBrick(4500 + 48 * i, 200, imagesLoader));
 
+        blocks.add(new ItemBrick(4644, 200, imagesLoader));
+
+        blocks.add(new RedBrick(4644, 380, imagesLoader));
+
+        blocks.add(new RedBrick(4996, 380, imagesLoader));
+        blocks.add(new RedBrick(5044, 380, imagesLoader));
+
+        blocks.add(new ItemBrick(5236, 380, imagesLoader));
+        blocks.add(new ItemBrick(5380, 380, imagesLoader));
+        blocks.add(new ItemBrick(5524, 380, imagesLoader));
+        blocks.add(new ItemBrick(5380, 200, imagesLoader));
+
+        blocks.add(new RedBrick(5572, 380, imagesLoader));
+
+        blocks.add(new RedBrick(5668, 200, imagesLoader));
+        blocks.add(new RedBrick(5716, 200, imagesLoader));
+        blocks.add(new RedBrick(5764, 200, imagesLoader));
+
+        enemies.add(new Mushroom(5812, 480, imagesLoader));
+        enemies.add(new Mushroom(5860, 480, imagesLoader));
+        enemies.add(new Mushroom(5956, 480, imagesLoader));
+        enemies.add(new Mushroom(6004, 480, imagesLoader));
+
+        blocks.add(new RedBrick(6004, 200, imagesLoader));
+        blocks.add(new RedBrick(6052, 200, imagesLoader));
+
+
 
         elements.addAll(enemies);
         elements.addAll(blocks);

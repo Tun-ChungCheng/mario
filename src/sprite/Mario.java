@@ -7,16 +7,16 @@ import java.util.Objects;
 
 
 public class Mario extends Sprite {
-    private static final int PLAYER_WIDTH = 48;
-    private static final int PLAYER_HEIGHT = 48;
+    private static final int WIDTH = 48;
+    private static final int HEIGHT = 48;
 
-    private int dx = 1, dy = 8;
+    private int dx = 1, dy = 8, jumpHeight = 20;
     private boolean isUp, isRight, isDown, isLeft, isJump;
     private boolean isFacingRight = true;
     private SoundsLoader soundsLoader;
 
     public Mario(int x, int y, ImagesLoader imagesLoader, SoundsLoader soundsLoader) {
-        super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, imagesLoader, "idleRight");
+        super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight");
         this.soundsLoader = soundsLoader;
     }
 
@@ -24,25 +24,27 @@ public class Mario extends Sprite {
         updateImage();
         updatePosition();
         updateJumpStatus();
-        updateFalling();
+        checkIfFalling();
         super.updateSprite();
     }
 
     private void updateImage() {
-        if (isFacingRight) setImage("idleRight");
+        if (isFacingRight)  setImage("idleRight");
         if (!isFacingRight) setImage("idleLeft");
 
-        if (isJump && isFacingRight) setImage("jumpRight");
+        if (isJump && isFacingRight)  setImage("jumpRight");
         if (isJump && !isFacingRight) setImage("jumpLeft");
 
-        if (!isJump && isRight) setRunningImages("runningRight");
-        if (!isJump && isLeft) setRunningImages("runningLeft");
-    }
-
-    private void setRunningImages(String name) {
-        setImage(name);
-        loopImage(20);
-        isFacingRight = Objects.equals(name, "runningRight");
+        if (!isJump && isRight) {
+            setImage("runningRight");
+            loopImage(120);
+            isFacingRight = true;
+        }
+        if (!isJump && isLeft) {
+            setImage("runningLeft");
+            loopImage(120);
+            isFacingRight = false;
+        }
     }
 
     private void updatePosition() {
@@ -63,7 +65,6 @@ public class Mario extends Sprite {
             isFacingRight = false;
             x -= dx;
         }
-
     }
 
     private void updateJumpStatus() {
@@ -74,6 +75,8 @@ public class Mario extends Sprite {
         setImage("die");
 //        soundsLoader.playDieSound();
     }
+
+    // ------------------------ Getter / Setter ------------------------
 
     public void setUp(boolean up) {
         isUp = up;

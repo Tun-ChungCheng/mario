@@ -15,10 +15,10 @@ public abstract class Sprite extends Rectangle{
 
     private static final int FLOOR_HEIGHT = 625;
 
-    private boolean       isLooping, collision = true;
-    private int           animationTick, 
-                          animationIndex, 
-                          animationSpeed;
+    private boolean       isLooping, collision;
+    private int           imageTick,
+                          imageSpeed,
+                          imageIndex;
     private String        imageName;
     private ImagesLoader  imagesLoader;
     private BufferedImage image;
@@ -39,18 +39,18 @@ public abstract class Sprite extends Rectangle{
         isLooping = false;
     }
 
-    protected void loopImage(int animationSpeed) {
+    protected void loopImage(int imageSpeed) {
         if (imagesLoader.numImages(imageName) > 1) {
-            this.animationSpeed = animationSpeed;
+            this.imageSpeed = imageSpeed;
             isLooping = true;
         } else System.out.println(imageName + " is not a sequence of images");
     }
 
     private void updateTick() {
-        if (++animationTick >= animationSpeed) {
-            animationTick = 0;
-            if (++animationIndex >= imagesLoader.numImages(imageName))
-                animationIndex = 0;
+        if (++imageTick >= imageSpeed) {
+            imageSpeed = 0;
+            if (++imageIndex >= imagesLoader.numImages(imageName))
+                imageIndex = 0;
         }
     }
 
@@ -58,7 +58,7 @@ public abstract class Sprite extends Rectangle{
         if (isLooping) updateTick();
     }
 
-    protected void updateFalling() {
+    protected void checkIfFalling() {
         if (!isSolid(x, y, x + width,y + height + GRAVITY)) y += GRAVITY;
     }
 
@@ -69,14 +69,14 @@ public abstract class Sprite extends Rectangle{
     public void drawSprite(Graphics g){
         if (image == null) g.fillRect(x, y, width, height);
         else {
-            if (isLooping) image = imagesLoader.getImage(imageName, animationIndex);
+            if (isLooping) image = imagesLoader.getImage(imageName, imageIndex);
             g.drawImage(image, x, y, width, height, null);
         }
     }
 
     public void setCollisionTimer() {
-        collision = false;
-        new Timer(200, (e) -> collision = true).start();
+        collision = true;
+        new Timer(500, (e) -> collision = false).start();
     }
 
     public boolean isCollision() {
