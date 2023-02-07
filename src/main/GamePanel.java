@@ -7,10 +7,7 @@ import util.SoundsLoader;
 import util.ImagesLoader;
 
 import javax.swing.JPanel;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 
 
 public class GamePanel extends JPanel implements Runnable{
@@ -21,14 +18,14 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SPAWN_X = 200;
     private static final int SPAWN_Y = 500;
     private static final String IMAGES_INFO = "imagesInfo.txt";
-    private static final String MARIO_FONT = "font\\mario-font.ttf";
+    private static final String FONT_DIR = "font/mario-font.ttf";
 
     private Thread animator;
     private volatile boolean running  = false;
     private volatile boolean isPaused = false;
     private volatile boolean gameOver = false;
-    private int score     = 0,
-                world     = 1,
+
+    private int world     = 1,
                 level     = 1,
                 countdown = 300;
     private Mario             mario;
@@ -48,10 +45,10 @@ public class GamePanel extends JPanel implements Runnable{
 
         camera = new Camera();
         mapManager = new MapManager(imagesLoader, currentMap);
-        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader, mapManager);
+        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, soundsLoader, mapManager, this);
 
         addKeyListener(new InputManager(mario));
-        fontMetrics = this.getFontMetrics(new Font(MARIO_FONT, Font.BOLD, 36));
+        fontMetrics = this.getFontMetrics(new Font(FONT_DIR, Font.BOLD, 36));
     }
 
 
@@ -103,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable{
                 lastCheck = System.currentTimeMillis();
                 System.out.printf("FPS = %d | UPS = %d%n", frames, updates);
                 frames = updates = 0;
-                countdown--;
+                if (!gameOver) countdown--;
             }
         }
         System.exit(0);
@@ -127,29 +124,33 @@ public class GamePanel extends JPanel implements Runnable{
         camera.render(g);
         mapManager.drawSprite(g);
         mario.drawSprite(g);
+        if (gameOver) gameOverMessage(g);
         reportStatus(g);
-        if (gameOver) {}
     }
 
     private void reportStatus(Graphics g) {
-        String record  = ("MARIO:%06d    WORLD:%d-%d    TIME:%d")
-                .formatted(score, world, level, countdown);
+        String record  = ("MARIO %06d    WORLD %d-%d    TIME %d")
+                .formatted(mario.getScore(), world, level, countdown);
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(record)) / 2;
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
+
         g.setFont(fontMetrics.getFont());
         g.drawString(record, x + camera.getX(), y + camera.getY());
     }
 
-    public void resumeGame() {
-        isPaused = false;
+    private void gameOverMessage(Graphics g) {
+        String message = "GAME OVER";
+        int x = (PANEL_WIDTH - fontMetrics.stringWidth(message)) / 2 + camera.getX();
+        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 2 + camera.getY();
+
+        g.setColor(Color.black);
+        g.fillRect(camera.getX(), camera.getY() , PANEL_WIDTH, PANEL_HEIGHT);
+        g.setColor(Color.white);
+        g.setFont(fontMetrics.getFont());
+        g.drawString(message, x, y);
     }
 
-    public void pauseGame() {
-        isPaused = true;
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
-
-    public void stopGame() {
-        running = false;
-    }
-
 }

@@ -1,5 +1,6 @@
 package sprite;
 
+import main.GamePanel;
 import map.MapManager;
 import sprite.block.Block;
 import sprite.block.ItemBrick;
@@ -17,19 +18,23 @@ public class Mario extends Sprite {
     private static final int HEIGHT = 48;
     private static final int MAX_UP_STEPS = 50;
 
-    private int dx, dy, upCount;
-    private boolean isUp, isRight, isDown, isLeft, isJump;
-    private boolean isFacingRight = true, maxUp;
+    private int dx, dy, upCount, score;
+    private boolean isUp, isRight, isDown, isLeft, isJump,
+                    isFacingRight, maxUp;
     private ArrayList<Sprite> mapElements;
-    private SoundsLoader soundsLoader;
+    private SoundsLoader      soundsLoader;
+    private GamePanel         gamePanel;
 
 
-    public Mario(int x, int y, ImagesLoader imagesLoader, SoundsLoader soundsLoader, MapManager mapManager) {
+    public Mario(int x, int y, ImagesLoader imagesLoader,
+                 SoundsLoader soundsLoader, MapManager mapManager, GamePanel gamePanel) {
         super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight");
         this.soundsLoader = soundsLoader;
         this.mapElements = mapManager.getMapElements();
+        this.gamePanel = gamePanel;
 
-        dx = 1; dy = 8; upCount = 0;
+        dx = 1; dy = 8; upCount = 0; score = 0;
+        isFacingRight = true;
     }
 
     public void updateSprite(){
@@ -50,12 +55,12 @@ public class Mario extends Sprite {
 
         if (!isJump && isRight) {
             setImage("runningRight");
-            loopImage(120);
+            loopImage(30);
             isFacingRight = true;
         }
         if (!isJump && isLeft) {
             setImage("runningLeft");
-            loopImage(120);
+            loopImage(30);
             isFacingRight = false;
         }
     }
@@ -111,11 +116,17 @@ public class Mario extends Sprite {
     private void enemyCollision(Enemy enemy) {
         if (!enemy.isDie()) {
             if (isJump) {
-                enemy.setDie();
-//                score += 500;
+                enemy.die();
                 y -= height;
-            } else setDie();
+                score += 100;
+            } else die();
         }
+    }
+
+    private void die() {
+        setImage("die");
+        gamePanel.setGameOver(true);
+//        soundsLoader.playDieSound();
     }
 
     private void blockCollision(Block block) {
@@ -127,9 +138,9 @@ public class Mario extends Sprite {
         if (y > block.y) {
             if (block instanceof RedBrick || block instanceof ItemBrick) {
                 if (y < block.y + block.height) y = block.y + block.height;
-                if (block instanceof ItemBrick) {
+                if (block instanceof ItemBrick && !((ItemBrick) block).isHit()) {
                     ((ItemBrick) block).shake();
-//                    score += 500;
+                    score += 200;
                 }
             }
 
@@ -139,13 +150,6 @@ public class Mario extends Sprite {
             }
         }
     }
-
-
-    public void setDie() {
-        setImage("die");
-//        soundsLoader.playDieSound();
-    }
-
     // ------------------------ Getter / Setter ------------------------
 
     public void setUp(boolean up) {
@@ -164,4 +168,7 @@ public class Mario extends Sprite {
         isLeft = left;
     }
 
+    public int getScore() {
+        return score;
+    }
 }

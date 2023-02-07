@@ -25,7 +25,6 @@ public abstract class Enemy extends Sprite {
     }
 
     private void updatePosition() {
-        if (isSolid(x - dx, y, x + width + dx, y + height)) changeDirection();
         x -= dx;
     }
 
@@ -41,7 +40,7 @@ public abstract class Enemy extends Sprite {
         dx *= -1;
     }
 
-    public void setDie() {
+    public void die() {
         dx = 0;
         isDie = true;
         setImage("mushroomDie");
@@ -50,6 +49,4 @@ public abstract class Enemy extends Sprite {
     public boolean isDie() {
         return isDie;
     }
-
-
 }

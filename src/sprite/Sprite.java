@@ -3,11 +3,8 @@ package sprite;
 
 import util.ImagesLoader;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
-import static map.MapManager.MAP_WIDTH;
 
 
 public abstract class Sprite extends Rectangle{
@@ -15,7 +12,7 @@ public abstract class Sprite extends Rectangle{
 
     protected static final int FLOOR_HEIGHT = 625;
 
-    private boolean       isLooping, collision;
+    private boolean       isLooping;
     private int           imageTick,
                           imageSpeed,
                           imageIndex;
@@ -48,7 +45,7 @@ public abstract class Sprite extends Rectangle{
 
     private void updateTick() {
         if (++imageTick >= imageSpeed) {
-            imageSpeed = 0;
+            imageTick = 0;
             if (++imageIndex >= imagesLoader.numImages(imageName))
                 imageIndex = 0;
         }
@@ -56,10 +53,6 @@ public abstract class Sprite extends Rectangle{
 
     public void updateSprite() {
         if (isLooping) updateTick();
-    }
-
-    protected boolean isSolid(int left, int top, int right, int bottom) {
-        return ((left <= 0) || (top <= 0) || (right >= MAP_WIDTH) || (bottom >= FLOOR_HEIGHT));
     }
 
     public void drawSprite(Graphics g){

@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 
 public class ImagesLoader {
-    private final static String IMAGE_DIR = "images/";
+    private static final String IMAGE_DIR = "images/";
 
     private HashMap<String, ArrayList<BufferedImage>> imagesMap;
     
@@ -111,12 +111,12 @@ public class ImagesLoader {
         BufferedImage[] strip = loadStripImageArray(filename, number);
         if (strip == null) return 0;
 
-        ArrayList imagesList = new ArrayList();
+        ArrayList<BufferedImage> imagesList = new ArrayList<>();
         int loadCount = 0;
         System.out.println("  Adding " + name + "/" + filename + "... ");
-        for (int i = 0; i < strip.length; i++) {
-        	imagesList.add(strip[i]);
-        	loadCount++;
+        for (BufferedImage bufferedImage : strip) {
+            imagesList.add(bufferedImage);
+            loadCount++;
         }
         
         if (loadCount == 0) System.out.println("No images loaded for " + name);
@@ -131,8 +131,7 @@ public class ImagesLoader {
         String pathname = IMAGE_DIR + filename;
 
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File(pathname));
-            return bufferedImage;
+            return ImageIO.read(new File(pathname));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,34 +162,34 @@ public class ImagesLoader {
     // ------------------ access methods -------------------
 
     public BufferedImage getImage(String imageName) {
-    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+    	ArrayList<BufferedImage> imagesList = imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return null;
         }
 
-        return (BufferedImage) imagesList.get(0);
+        return imagesList.get(0);
     }
 
     public BufferedImage getImage(String imageName, int position) {
-    	ArrayList imagesList = imagesMap.get(imageName);
+    	ArrayList<BufferedImage> imagesList = imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return null;
         }
 
         int imagesListSize = imagesList.size();
-        if (position < 0) return (BufferedImage) imagesList.get(0);
+        if (position < 0) return imagesList.get(0);
         else if (position >= imagesListSize) {
             int newPosition = position % imagesListSize;
-            return (BufferedImage) imagesList.get(newPosition);
+            return imagesList.get(newPosition);
         }
 
-        return (BufferedImage) imagesList.get(position);
+        return imagesList.get(position);
     }
 
     public int numImages(String imageName) {
-    	ArrayList imagesList = (ArrayList) imagesMap.get(imageName);
+    	ArrayList<BufferedImage> imagesList = imagesMap.get(imageName);
         if (imagesList == null) {
             System.out.println("No image(s) stored under " + imageName);
             return 0;
