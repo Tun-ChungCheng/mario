@@ -11,8 +11,8 @@ o die.png
 o world1level1.png
 
 // enemy's images
-s mushroom.png 2
-o mushroomDie.png
+s goomba.png 2
+o goombaDie.png
 
 // block's images
 o redBrick.png

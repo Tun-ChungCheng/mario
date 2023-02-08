@@ -3,17 +3,16 @@ package sprite.enemy;
 import sprite.Sprite;
 import util.ImagesLoader;
 
+import javax.swing.*;
 import java.awt.*;
 
 public abstract class Enemy extends Sprite {
-    private static final int WIDTH = 32;
-    private static final int HEIGHT = 32;
-
     private int dx = 1;
     private boolean isDie = false;
 
-    public Enemy(int x, int y, ImagesLoader imagesLoader, String imageName) {
-        super(x, y, WIDTH, HEIGHT, imagesLoader, imageName);
+    public Enemy(int x, int y, int width, int height, ImagesLoader imagesLoader, String imageName) {
+        super(x, y, width, height, imagesLoader, imageName);
+
         setImage(imageName);
         loopImage(20);
     }
@@ -41,9 +40,8 @@ public abstract class Enemy extends Sprite {
     }
 
     public void die() {
-        dx = 0;
-        isDie = true;
-        setImage("mushroomDie");
+        dx = 0; setImage("goombaDie");
+        new Timer(50, (e) ->  isDie = true).start();
     }
 
     public boolean isDie() {

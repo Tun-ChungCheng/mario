@@ -8,10 +8,12 @@ import util.ImagesLoader;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 
 public class GamePanel extends JPanel implements Runnable{
-    public static final int PANEL_WIDTH = 1344;
+    public static final int PANEL_WIDTH = 768;
     public static final int PANEL_HEIGHT = 720;
     private static final int FPS = 120;
     private static final int UPS = 200;
@@ -19,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int SPAWN_Y = 500;
     private static final String IMAGES_INFO = "imagesInfo.txt";
     private static final String SOUNDS_INFO = "soundsInfo.txt";
-    private static final String FONT_DIR = "font/mario-font.ttf";
+    private static final String FONT_DIR = "font/mario.ttf";
 
     private Thread animator;
     private volatile boolean running  = false;
@@ -50,9 +52,14 @@ public class GamePanel extends JPanel implements Runnable{
         mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
 
         addKeyListener(new InputManager(mario));
-        fontMetrics = this.getFontMetrics(new Font(FONT_DIR, Font.BOLD, 36));
-    }
 
+        try {
+            Font marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
+            fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void addNotify() {
         super.addNotify();
@@ -132,11 +139,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        String record  = ("MARIO %06d    WORLD %d-%d    TIME %d")
+        String record  = ("SCORE %06d    WORLD %d-%d    TIME %d")
                 .formatted(mario.getScore(), world, level, countdown);
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(record)) / 2;
-        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 15;
+        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 12;
 
+        g.setColor(Color.white);
         g.setFont(fontMetrics.getFont());
         g.drawString(record, x + camera.getX(), y + camera.getY());
     }

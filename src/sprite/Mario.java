@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Mario extends Sprite {
     private static final int WIDTH = 48;
     private static final int HEIGHT = 48;
-    private static final int MAX_UP_STEPS = 50;
+    private static final int MAX_UP_STEPS = 80;
 
     private int dx, dy, upCount, score;
     private boolean isUp, isRight, isDown, isLeft, isJump,
@@ -113,8 +113,9 @@ public class Mario extends Sprite {
 
     private void enemyCollision(Enemy enemy) {
         if (!enemy.isDie()) {
-            if (isJump) {
+            if (y + height < enemy.y + enemy.height / 2) {
                 enemy.die();
+                System.out.println(y + height);
                 clipsLoader.play("stomp", false);
                 y -= height;
                 score += 100;
@@ -130,7 +131,7 @@ public class Mario extends Sprite {
     }
 
     private void blockCollision(Block block) {
-        if (y < block.y) {
+        if (y < block.y && x > block.y) {
             y = block.y - height;
             resetJump();
         }

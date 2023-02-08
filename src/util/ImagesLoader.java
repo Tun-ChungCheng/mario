@@ -25,9 +25,9 @@ public class ImagesLoader {
     }
 
     private void loadImagesFile(String imagesInfo) {
-        String imagesInfoPath = IMAGE_DIR + imagesInfo;
-        System.out.println("Reading file: " + imagesInfoPath);
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(imagesInfoPath))) {
+        String relativePath = IMAGE_DIR + imagesInfo;
+        System.out.println("Reading file: " + relativePath);
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(relativePath))) {
             String line;
             char ch;
             while((line = bufferedReader.readLine()) != null) {

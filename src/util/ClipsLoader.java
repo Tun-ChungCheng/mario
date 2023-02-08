@@ -16,8 +16,8 @@ public class ClipsLoader {
     }
 
     private void loadSoundsFile(String soundsInfo) {
-        String soundsInfoPath = SOUND_DIR + soundsInfo;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(soundsInfoPath))) {
+        String relativePath = SOUND_DIR + soundsInfo;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(relativePath))) {
             StringTokenizer tokens;
             String line, name, filename;
             while ((line = bufferedReader.readLine()) != null) {
@@ -33,7 +33,7 @@ public class ClipsLoader {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading file: " + soundsInfoPath);
+            System.out.println("Error reading file: " + relativePath);
             System.exit(1);
         }
     }

@@ -5,7 +5,7 @@ import sprite.block.ItemBrick;
 import sprite.block.Pipe;
 import sprite.block.RedBrick;
 import sprite.enemy.Enemy;
-import sprite.enemy.Mushroom;
+import sprite.enemy.Goomba;
 import util.ImagesLoader;
 
 import java.util.ArrayList;
@@ -27,16 +27,16 @@ public class World1Level1 extends GameElement {
         blocks.add(new RedBrick(1192, 380, imagesLoader));
 
         blocks.add(new ItemBrick(1096, 180, imagesLoader));
-        enemies.add(new Mushroom(1096, 480, imagesLoader));
+        enemies.add(new Goomba(1096, 480, imagesLoader));
 
         blocks.add(new Pipe(1384, 526, SMALL_SIZE, imagesLoader));
 
         blocks.add(new Pipe(1820, 495, MEDIUM_SIZE, imagesLoader));
-        enemies.add(new Mushroom(1916, 480, imagesLoader));
+        enemies.add(new Goomba(1916, 480, imagesLoader));
 
         blocks.add(new Pipe(2210, 453, LARGE_SIZE, imagesLoader));
-        enemies.add(new Mushroom(2500, 480, imagesLoader));
-        enemies.add(new Mushroom(2548, 480, imagesLoader));
+        enemies.add(new Goomba(2500, 480, imagesLoader));
+        enemies.add(new Goomba(2548, 480, imagesLoader));
 
         blocks.add(new Pipe(2745, 453, LARGE_SIZE, imagesLoader));
 
@@ -47,8 +47,8 @@ public class World1Level1 extends GameElement {
         for (int i = 0; i < 9; i++)
             blocks.add(new RedBrick(3844 + 48 * i, 200, imagesLoader));
 
-        enemies.add(new Mushroom(3844, 168, imagesLoader));
-        enemies.add(new Mushroom(3940, 168, imagesLoader));
+        enemies.add(new Goomba(3844, 168, imagesLoader));
+        enemies.add(new Goomba(3940, 168, imagesLoader));
 
         for (int i = 0; i < 3; i++)
             blocks.add(new RedBrick(4500 + 48 * i, 200, imagesLoader));
@@ -71,10 +71,10 @@ public class World1Level1 extends GameElement {
         blocks.add(new RedBrick(5716, 200, imagesLoader));
         blocks.add(new RedBrick(5764, 200, imagesLoader));
 
-        enemies.add(new Mushroom(5812, 480, imagesLoader));
-        enemies.add(new Mushroom(5860, 480, imagesLoader));
-        enemies.add(new Mushroom(5956, 480, imagesLoader));
-        enemies.add(new Mushroom(6004, 480, imagesLoader));
+        enemies.add(new Goomba(5812, 480, imagesLoader));
+        enemies.add(new Goomba(5860, 480, imagesLoader));
+        enemies.add(new Goomba(5956, 480, imagesLoader));
+        enemies.add(new Goomba(6004, 480, imagesLoader));
 
         blocks.add(new RedBrick(6004, 200, imagesLoader));
         blocks.add(new RedBrick(6052, 200, imagesLoader));
