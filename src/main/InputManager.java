@@ -22,8 +22,8 @@ public class InputManager implements KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> mario.setUp(true);
             case KeyEvent.VK_RIGHT -> mario.setRight(true);
-            case KeyEvent.VK_DOWN  -> mario.setDown(true);
-            case KeyEvent.VK_LEFT  -> mario.setLeft(true);
+            case KeyEvent.VK_DOWN -> mario.setDown(true);
+            case KeyEvent.VK_LEFT -> mario.setLeft(true);
         }
     }
 

@@ -4,16 +4,15 @@ import sprite.Mario;
 import util.Camera;
 import map.MapManager;
 import util.ClipsLoader;
-import util.Database;
 import util.ImagesLoader;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 
-public class GamePanel extends JPanel implements Runnable{
+public class Game extends JPanel implements Runnable{
     public static final int PANEL_WIDTH = 768;
     public static final int PANEL_HEIGHT = 720;
     private static final int FPS = 120;
@@ -25,9 +24,9 @@ public class GamePanel extends JPanel implements Runnable{
     private static final String FONT_DIR = "font/mario.ttf";
 
     private Thread animator;
-    private volatile boolean running  = false;
-    private volatile boolean isPaused = false;
-    private volatile boolean gameOver = false;
+    private volatile boolean running  = false,
+                             isPaused = false,
+                             gameOver = false;
 
     private int world     = 1,
                 level     = 1,
@@ -35,16 +34,17 @@ public class GamePanel extends JPanel implements Runnable{
     private Mario             mario;
     private Camera            camera;
     private MapManager        mapManager;
+    private ClipsLoader       clipsLoader;
     private FontMetrics       fontMetrics;
 
 
-    public GamePanel() {
+    public Game() {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setFocusable(true);
-        requestFocus();
+        requestFocusInWindow();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-        ClipsLoader clipsLoader = new ClipsLoader(SOUNDS_INFO);
+        clipsLoader = new ClipsLoader(SOUNDS_INFO);
         clipsLoader.play("background", true);
         String currentMap = "world" + world + "level" + level;
 
@@ -125,7 +125,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
-            if (mario.isDie()) gameOver = true;
+            if (mario.isDie())
+                new Timer(3000, (e) -> gameOver = true).start();
             camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();
             mapManager.updateSprite();
@@ -152,6 +153,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     private void gameOverMessage(Graphics g) {
+        clipsLoader.play("gameOver", false);
+
         String message = "GAME OVER";
         int x = (PANEL_WIDTH - fontMetrics.stringWidth(message)) / 2 + camera.getX();
         int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 2 + camera.getY();

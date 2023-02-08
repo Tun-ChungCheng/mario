@@ -1,4 +1,4 @@
-package util;
+package db;
 
 import java.sql.*;
 import java.util.Properties;
@@ -24,7 +24,7 @@ public class Database {
 
         connection = DriverManager.getConnection(url, properties);
         if (connection != null) System.out.printf("Connect to SERVER %s:%s DATABASE %s successful%n", IP, PORT, DATABASE);
-
+        assert connection != null;
         PreparedStatement statement = connection.prepareStatement(QUERY_ALL + TABLE,
                                                                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                                     ResultSet.CONCUR_UPDATABLE);

@@ -60,22 +60,26 @@ public class Mario extends Sprite {
             loopImage(30);
             isFacingRight = false;
         }
+
+        if (isDie) setImage("die");
     }
 
     private void updatePosition() {
-        if (isUp && !maxUp) {
-            clipsLoader.play("jump", false);
-            y -= dy;
-            if (isRight) x += (dx / 2);
-            if (isLeft) x -= (dx / 2);
-        }
-        if (isRight) {
-            isFacingRight = true;
-            x += dx;
-        }
-        if (isLeft) {
-            isFacingRight = false;
-            x -= dx;
+        if (!isDie) {
+            if (isUp && !maxUp) {
+                clipsLoader.play("jump", false);
+                y -= dy;
+                if (isRight) x += (dx / 2);
+                if (isLeft) x -= (dx / 2);
+            }
+            if (isRight) {
+                isFacingRight = true;
+                x += dx;
+            }
+            if (isLeft) {
+                isFacingRight = false;
+                x -= dx;
+            }
         }
     }
 
@@ -123,10 +127,11 @@ public class Mario extends Sprite {
     }
 
     private void die() {
-        setImage("die");
-        clipsLoader.stop("background");
-        clipsLoader.play("die", false);
-        isDie = true;
+        if (!isDie) {
+            isDie = true;
+            clipsLoader.stop("background");
+            clipsLoader.play("die", false);
+        }
     }
 
     private void blockCollision(Block block) {

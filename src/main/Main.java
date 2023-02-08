@@ -1,14 +1,14 @@
 package main;
 
+import db.Database;
 import ui.Login;
-import util.Database;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 
+// https://www.mariouniverse.com/sprites-nes-smb/
 public class Main implements ActionListener {
     JPanel cards;
     private static Database playerDatabase;
@@ -22,18 +22,13 @@ public class Main implements ActionListener {
 
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (InstantiationException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
 
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-        javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
+        javax.swing.SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
 
     private static void createAndShowGUI() {
@@ -49,13 +44,15 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        GamePanel game = new GamePanel();
-
         Login login = new Login();
+        login.getLoginButton().addActionListener(this);
 
+        Game game = new Game();
+        game.addComponentListener(new FocusManager());
 
         cards = new JPanel(new CardLayout());
-        cards.add(game);
+        cards.add(login);
+        cards.add(game, "login");
 
         contentPane.add(cards);
     }
