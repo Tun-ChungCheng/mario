@@ -4,6 +4,7 @@ import sprite.Mario;
 import util.Camera;
 import map.MapManager;
 import util.ClipsLoader;
+import util.Database;
 import util.ImagesLoader;
 
 import javax.swing.JPanel;
@@ -51,8 +52,9 @@ public class GamePanel extends JPanel implements Runnable{
         mapManager = new MapManager(imagesLoader, currentMap);
         mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
 
-        addKeyListener(new InputManager(mario));
 
+
+        addKeyListener(new InputManager(mario));
         try {
             Font marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
             fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));

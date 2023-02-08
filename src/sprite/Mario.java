@@ -114,9 +114,8 @@ public class Mario extends Sprite {
     private void enemyCollision(Enemy enemy) {
         if (!enemy.isDie()) {
             if (y + height < enemy.y + enemy.height / 2) {
-                enemy.die();
-                System.out.println(y + height);
                 clipsLoader.play("stomp", false);
+                enemy.die();
                 y -= height;
                 score += 100;
             } else die();

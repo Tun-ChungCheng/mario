@@ -1,5 +1,7 @@
 package main;
 
+import util.Database;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +12,7 @@ public class GameFrame extends JFrame{
         super("Super Mario Bros.");
 
         gamePanel = new GamePanel();
-        add(gamePanel, BorderLayout.CENTER);
+        add(gamePanel);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
