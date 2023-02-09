@@ -44,7 +44,7 @@ public class Register extends UserInterface implements ActionListener {
 
         if (checkAccount()) {
             if (addMember()) {
-                cardLayout.show(cards, e.getActionCommand());
+                cardLayout.show(cards, "game");
                 game.startGame();
             }
             else System.out.println("account exist");

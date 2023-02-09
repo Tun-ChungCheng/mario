@@ -1,13 +1,16 @@
 package ui;
 
 import db.Database;
+import db.Player;
 import main.Game;
+import util.BCrypt;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Login extends UserInterface implements ActionListener {
@@ -27,24 +30,41 @@ public class Login extends UserInterface implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String actionCommand = e.getActionCommand();
         CardLayout cardLayout = (CardLayout) cards.getLayout();
+        String account = accountField.getText();
+        String password = passwordField.getPassword().toString();
 
-        if (logIn()) {
+        if (logIn(account, password)) {
             game.startGame();
-            cardLayout.show(cards, actionCommand);
+            cardLayout.show(cards, "game");
         }
 
 
         System.out.println(accountField.getText());
-        System.out.println(passwordField.getText());
+        System.out.println(passwordField.getPassword());
 
     }
 
-    private boolean logIn() {
+    private boolean logIn(String account, String password) {
         try (PreparedStatement statement = marioDatabase.connection.prepareStatement(LOG_IN)) {
-            statement.setString(1, accountField.getText());
-            statement.executeQuery();
+            statement.setString(1, account);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                if (BCrypt.checkpw(password, resultSet.getString("password"))) {
+                    Player player = new Player( resultSet.getInt("id"),
+                                                resultSet.getString("name"),
+                                                resultSet.getString("account"),
+                                                resultSet.getString("score") );
+                    System.out.println(player.getId());
+                    System.out.println(player.getName());
+                    System.out.println(player.getAccount());
+                    System.out.println(player.getScore());
+
+                    return true;
+                } else return false;
+
+            } else return false;
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
