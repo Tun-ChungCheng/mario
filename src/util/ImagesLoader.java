@@ -20,14 +20,18 @@ public class ImagesLoader {
         loadImagesFile(imagesInfo);
     }
 
+    public ImagesLoader() {
+        initLoader();
+    }
+
     private void initLoader() {
         imagesMap = new HashMap<>();
     }
 
     private void loadImagesFile(String imagesInfo) {
-        String relativePath = IMAGE_DIR + imagesInfo;
-        System.out.println("Reading file: " + relativePath);
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(relativePath))) {
+        String pathFromContentRoot = IMAGE_DIR + imagesInfo;
+        System.out.println("Reading file: " + pathFromContentRoot);
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pathFromContentRoot))) {
             String line;
             char ch;
             while((line = bufferedReader.readLine()) != null) {
@@ -128,10 +132,10 @@ public class ImagesLoader {
     // ------------------- Image Input ------------------
 
     public BufferedImage loadImage(String filename) {
-        String pathname = IMAGE_DIR + filename;
+        String pathFromContentRoot = IMAGE_DIR + filename;
 
         try {
-            return ImageIO.read(new File(pathname));
+            return ImageIO.read(new File(pathFromContentRoot));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

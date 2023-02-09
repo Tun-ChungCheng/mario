@@ -11,10 +11,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+import static main.Main.WINDOW_HEIGHT;
+import static main.Main.WINDOW_WIDTH;
+
 
 public class Game extends JPanel implements Runnable{
-    public static final int PANEL_WIDTH = 768;
-    public static final int PANEL_HEIGHT = 720;
+
     private static final int FPS = 120;
     private static final int UPS = 200;
     private static final int SPAWN_X = 200;
@@ -39,9 +41,7 @@ public class Game extends JPanel implements Runnable{
 
 
     public Game() {
-        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setFocusable(true);
-        requestFocusInWindow();
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
@@ -63,12 +63,7 @@ public class Game extends JPanel implements Runnable{
         }
     }
 
-    public void addNotify() {
-        super.addNotify();
-        startGame();
-    }
-
-    private void startGame() {
+    public void startGame() {
         if (animator == null || !running) {
             animator = new Thread(this);
             animator.start();
@@ -144,8 +139,8 @@ public class Game extends JPanel implements Runnable{
     private void reportStatus(Graphics g) {
         String record  = ("SCORE %06d    WORLD %d-%d    TIME %d")
                 .formatted(mario.getScore(), world, level, countdown);
-        int x = (PANEL_WIDTH - fontMetrics.stringWidth(record)) / 2;
-        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 12;
+        int x = (WINDOW_WIDTH - fontMetrics.stringWidth(record)) / 2;
+        int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 12;
 
         g.setColor(Color.white);
         g.setFont(fontMetrics.getFont());
@@ -156,11 +151,11 @@ public class Game extends JPanel implements Runnable{
         clipsLoader.play("gameOver", false);
 
         String message = "GAME OVER";
-        int x = (PANEL_WIDTH - fontMetrics.stringWidth(message)) / 2 + camera.getX();
-        int y = (PANEL_HEIGHT - fontMetrics.getHeight()) / 2 + camera.getY();
+        int x = (WINDOW_WIDTH - fontMetrics.stringWidth(message)) / 2 + camera.getX();
+        int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 2 + camera.getY();
 
         g.setColor(Color.black);
-        g.fillRect(camera.getX(), camera.getY() , PANEL_WIDTH, PANEL_HEIGHT);
+        g.fillRect(camera.getX(), camera.getY() , WINDOW_WIDTH, WINDOW_HEIGHT);
         g.setColor(Color.white);
         g.setFont(fontMetrics.getFont());
         g.drawString(message, x, y);
