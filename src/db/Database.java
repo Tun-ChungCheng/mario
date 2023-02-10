@@ -12,13 +12,15 @@ public class Database {
     private static final String DATABASE = "mario";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
-    private static final String QUERY_ALL = "SELECT * FROM players";
     private static final String CHECK_ACCOUNT = "SELECT count(*) count FROM players WHERE account = ?";
     private static final String INSERT_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
     private static final String LOG_IN = "SELECT * FROM players WHERE account = ?";
+    private static final String UPDATE_SCORE = "UPDATE players SET score = ? WHERE account = ?";
 
 
     public Connection connection;
+
+    private Player player;
 
     public Database() throws SQLException {
         Properties properties = new Properties();
@@ -42,15 +44,11 @@ public class Database {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                System.out.println("ch");
-                System.out.println(password);
-                System.out.println(resultSet.getString("password"));
-
                 if (BCrypt.checkpw(password, resultSet.getString("password"))) {
-                    Player player = new Player( resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("account"),
-                            resultSet.getString("score") );
+                    player = new Player( resultSet.getInt("id"),
+                                         resultSet.getString("name"),
+                                         resultSet.getString("account"),
+                                         resultSet.getString("score") );
                     System.out.println(player.getId());
                     System.out.println(player.getName());
                     System.out.println(player.getAccount());
@@ -69,6 +67,7 @@ public class Database {
     public boolean checkAccount(String account) {
         try (PreparedStatement statement = connection.prepareStatement(CHECK_ACCOUNT)) {
             statement.setString(1, account);
+            if (account.equals("")) return false;
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
 
@@ -85,7 +84,11 @@ public class Database {
             statement.setString(2, account);
             statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt()));
 
-            if (statement.executeUpdate() != 0) return true;
+            if (statement.executeUpdate() != 0) {
+                player.setName(name);
+                player.setAccount(account);
+                return true;
+            }
             else return false;
 
         } catch (SQLException e) {
@@ -94,4 +97,12 @@ public class Database {
 
     }
 
+    public void updateScore(int score) {
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_SCORE)) {
+            statement.setInt(1, score);
+            statement.setString(2, player.getAccount());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

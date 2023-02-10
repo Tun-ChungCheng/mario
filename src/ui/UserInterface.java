@@ -14,25 +14,27 @@ import static main.Main.WINDOW_WIDTH;
 public abstract class UserInterface extends JPanel {
     protected static final int SCALE = 3;
 
+    protected CardLayout cardLayout;
     protected JPanel cards;
-    protected JButton playButton;
-    protected JLabel accountLabel, passwordLabel;
+    protected JButton playButton, loginButton, registerButton, rankButton;
+    protected JLabel nameLabel, accountLabel, passwordLabel;
     protected JTextField accountField, nameField;
     protected JPasswordField passwordField;
     protected BufferedImage titleImage, mapImage;
     protected Game game;
     protected Database marioDatabase;
     protected Font marioFont;
-    protected String account, password;
+    protected String account, password, name;
 
 
     private ImagesLoader imagesLoader;
 
     public UserInterface(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
         this.imagesLoader = imagesLoader;
-        this.cards = cards;
         this.marioDatabase = marioDatabase;
         this.marioFont = marioFont.deriveFont(20f);
+        this.cards = cards;
+        cardLayout = (CardLayout) cards.getLayout();
 
         setImage();
         setLayout(null);

@@ -58,8 +58,6 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-
         Font marioFont;
         try {
             marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
@@ -67,11 +65,13 @@ public class Main implements ActionListener {
             throw new RuntimeException(e);
         }
 
-        cards             = new JPanel  (new CardLayout());
-        Game game         = new Game    (imagesLoader, marioFont);
-        Login login       = new Login   (imagesLoader, cards, marioDatabase, marioFont, game);
-        Register register = new Register(imagesLoader, cards, marioDatabase, marioFont, game);
-        Rank rank         = new Rank    (imagesLoader, cards, marioDatabase, marioFont);
+        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
+
+        cards                     = new JPanel      (new CardLayout());
+        Game game                 = new Game        (imagesLoader, marioDatabase, marioFont);
+        Login login               = new Login       (imagesLoader, cards, marioDatabase, marioFont, game);
+        Register register         = new Register    (imagesLoader, cards, marioDatabase, marioFont, game);
+        Rank rank                 = new Rank        (imagesLoader, cards, marioDatabase, marioFont);
 
         game.addComponentListener(new FocusManager());
         login.addComponentListener(new FocusManager());

@@ -10,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Login extends UserInterface implements ActionListener {
-    private Game game;
-    private JButton registerButton, rankButton;
 
     public Login(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
@@ -40,22 +38,23 @@ public class Login extends UserInterface implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CardLayout cardLayout = (CardLayout) cards.getLayout();
         String action = e.getActionCommand();
-
-        account = accountField.getText();
-        password = String.valueOf(passwordField.getPassword());
 
         switch (action) {
             case "register" -> cardLayout.show(cards, "register");
-            case "rank" -> cardLayout.show(cards, "rank");
-            case "play" -> {
-                if (marioDatabase.logIn(account, password)) {
-                    game.startGame();
-                    cardLayout.show(cards, "play");
-                } else
-                    JOptionPane.showMessageDialog(null, "Login fail!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            case "rank"     -> cardLayout.show(cards, "rank");
+            case "play"     -> logIn();
         }
+    }
+
+    private void logIn() {
+        account = accountField.getText();
+        password = String.valueOf(passwordField.getPassword());
+
+        if (marioDatabase.logIn(account, password)) {
+            game.startGame();
+            cardLayout.show(cards, "play");
+        } else
+            JOptionPane.showMessageDialog(null, "Login fail!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

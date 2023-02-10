@@ -1,5 +1,6 @@
 package main;
 
+import db.Database;
 import map.MapManager;
 import sprite.Mario;
 import util.Camera;
@@ -34,10 +35,13 @@ public class Game extends JPanel implements Runnable{
     private MapManager        mapManager;
     private ClipsLoader       clipsLoader;
     private FontMetrics       fontMetrics;
+    private Database          marioDatabase;
 
 
-    public Game(ImagesLoader imagesLoader, Font marioFont) {
+    public Game(ImagesLoader imagesLoader, Database marioDatabase, Font marioFont) {
         setFocusable(true);
+
+        this.marioDatabase = marioDatabase;
 
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
         clipsLoader.play("background", true);
@@ -148,6 +152,12 @@ public class Game extends JPanel implements Runnable{
         g.setColor(Color.white);
         g.setFont(fontMetrics.getFont());
         g.drawString(message, x, y);
+
+        saveScoreToDatabase();
+    }
+
+    private void saveScoreToDatabase() {
+        marioDatabase.updateScore(mario.getScore());
     }
 
 }

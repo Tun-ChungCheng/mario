@@ -11,12 +11,6 @@ import java.awt.event.ActionListener;
 
 
 public class Register extends UserInterface implements ActionListener {
-    private JButton loginButton;
-
-    private JLabel nameLabel;
-    private String name;
-    private CardLayout cardLayout;
-    private Game game;
 
     public Register(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
@@ -49,10 +43,6 @@ public class Register extends UserInterface implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        name = nameField.getText();
-        account = accountField.getText();
-        password = String.valueOf(passwordField.getPassword());
-        cardLayout = (CardLayout) cards.getLayout();
         String action = e.getActionCommand();
 
         switch (action) {
@@ -62,6 +52,10 @@ public class Register extends UserInterface implements ActionListener {
     }
 
     private void register() {
+        name = nameField.getText();
+        account = accountField.getText();
+        password = String.valueOf(passwordField.getPassword());
+
         if (marioDatabase.checkAccount(account)) {
             if (marioDatabase.addPlayer(name, account, password)) {
                 cardLayout.show(cards, "play");
