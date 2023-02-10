@@ -2,18 +2,27 @@ package main;
 
 import db.Database;
 import ui.Login;
+import ui.Rank;
 import ui.Register;
 import util.ImagesLoader;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 // https://www.mariouniverse.com/sprites-nes-smb/
 public class Main implements ActionListener {
     public static final int WINDOW_WIDTH = 768;
     public static final int WINDOW_HEIGHT = 720;
+
+    private static final String IMAGES_INFO = "imagesInfo.txt";
+    private static final String FONT_DIR = "font/mario.ttf";
+
+
+
 
     private JPanel cards;
     private static Database marioDatabase;
@@ -49,18 +58,29 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        cards = new JPanel(new CardLayout());
+        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
 
-        Game game = new Game();
+        Font marioFont;
+        try {
+            marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
+        } catch (IOException | FontFormatException e) {
+            throw new RuntimeException(e);
+        }
+
+        cards             = new JPanel  (new CardLayout());
+        Game game         = new Game    (imagesLoader, marioFont);
+        Login login       = new Login   (imagesLoader, cards, marioDatabase, marioFont, game);
+        Register register = new Register(imagesLoader, cards, marioDatabase, marioFont, game);
+        Rank rank         = new Rank    (imagesLoader, cards, marioDatabase, marioFont);
+
         game.addComponentListener(new FocusManager());
-
-        Login login = new Login(cards, marioDatabase, game);
-        Register register = new Register(cards, marioDatabase, game);
-
+        login.addComponentListener(new FocusManager());
+        register.addComponentListener(new FocusManager());
 
         cards.add(login, "login");
         cards.add(register, "register");
-        cards.add(game, "start");
+        cards.add(game, "play");
+        cards.add(rank, "rank");
 
         contentPane.add(cards);
     }

@@ -2,78 +2,80 @@ package ui;
 
 import db.Database;
 import main.Game;
-import util.BCrypt;
 import util.ImagesLoader;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static main.Main.WINDOW_HEIGHT;
-import static main.Main.WINDOW_WIDTH;
 
 
 public class Register extends UserInterface implements ActionListener {
+    private JButton loginButton;
 
-    private static final String CHECK_ACCOUNT = "SELECT count(*) count FROM players WHERE account = ?";
-    private static final String INSERT_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
+    private JLabel nameLabel;
+    private String name;
+    private CardLayout cardLayout;
+    private Game game;
 
-    public Register(JPanel cards, Database marioDatabase, Game game) {
-        super(cards, marioDatabase, game);
+    public Register(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
+        super(imagesLoader, cards, marioDatabase, font);
+        this.game = game;
+        addSameComponentToPane();
+
+        nameLabel = new JLabel("name");
+        nameLabel.setFont(marioFont);
+        nameLabel.setBounds(200, 400, 150, 30);
 
         nameField = new JTextField();
-        nameField.setBounds(284, 400, FIELD_WIDTH, FIELD_HEIGHT);
+        nameField.setFont(marioFont);
+        nameField.setBounds(284, 400, 200, 30);
+
+        playButton = new JButton("play");
+        playButton.setFont(marioFont);
+        playButton.setBounds(500, 450, 90, 80);
+        playButton.addActionListener(this);
+
+        loginButton = new JButton("login");
+        loginButton.setBounds(285, 550, 110, 30);
+        loginButton.setFont(marioFont);
+        loginButton.addActionListener(this);
+
+        add(nameLabel);
         add(nameField);
-
-        startButton.addActionListener(this);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(signatureImage, 230, 400, 30, 30, null);
+        add(playButton);
+        add(loginButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CardLayout cardLayout = (CardLayout) cards.getLayout();
+        name = nameField.getText();
+        account = accountField.getText();
+        password = String.valueOf(passwordField.getPassword());
+        cardLayout = (CardLayout) cards.getLayout();
+        String action = e.getActionCommand();
 
-        if (checkAccount()) {
-            if (addMember()) {
-                cardLayout.show(cards, "game");
+        switch (action) {
+            case "login" -> cardLayout.show(cards, "login");
+            case "play"  -> register();
+        }
+    }
+
+    private void register() {
+        if (marioDatabase.checkAccount(account)) {
+            if (marioDatabase.addPlayer(name, account, password)) {
+                cardLayout.show(cards, "play");
                 game.startGame();
-            }
-            else System.out.println("account exist");
-        } else System.out.println("account exist");
-    }
-
-    private boolean checkAccount() {
-        try (PreparedStatement statement = marioDatabase.connection.prepareStatement(CHECK_ACCOUNT)) {
-            statement.setString(1, accountField.getText());
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-
-            return resultSet.getInt("count") == 0;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            } else
+                JOptionPane.showMessageDialog(null, "Add player error!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private boolean addMember() {
-        try (PreparedStatement statement = marioDatabase.connection.prepareStatement(INSERT_ACCOUNT)) {
-            statement.setString(1, nameField.getText());
-            statement.setString(2, accountField.getText());
-            statement.setString(3, BCrypt.hashpw(passwordField.getPassword().toString(), BCrypt.gensalt()));
-            System.out.println(BCrypt.hashpw(passwordField.getPassword().toString(), BCrypt.gensalt()));
-            if (statement.executeUpdate() != 0) return true;
-            else return false;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        else if(name.equals(""))
+            JOptionPane.showMessageDialog(null, "Name can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+        else if(account.equals(""))
+            JOptionPane.showMessageDialog(null, "Account can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+        else if(password.equals(""))
+            JOptionPane.showMessageDialog(null, "Password can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(null, "Player exist!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-    }
 }

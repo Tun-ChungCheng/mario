@@ -1,6 +1,0 @@
-// login images
-o world1level1.png
-o signature.png
-o title.png
-o user.png
-o passwordKey.png

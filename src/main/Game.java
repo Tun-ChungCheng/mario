@@ -1,15 +1,13 @@
 package main;
 
+import map.MapManager;
 import sprite.Mario;
 import util.Camera;
-import map.MapManager;
 import util.ClipsLoader;
 import util.ImagesLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 import static main.Main.WINDOW_HEIGHT;
 import static main.Main.WINDOW_WIDTH;
@@ -21,9 +19,7 @@ public class Game extends JPanel implements Runnable{
     private static final int UPS = 200;
     private static final int SPAWN_X = 200;
     private static final int SPAWN_Y = 500;
-    private static final String IMAGES_INFO = "imagesInfo.txt";
     private static final String SOUNDS_INFO = "soundsInfo.txt";
-    private static final String FONT_DIR = "font/mario.ttf";
 
     private Thread animator;
     private volatile boolean running  = false,
@@ -40,10 +36,9 @@ public class Game extends JPanel implements Runnable{
     private FontMetrics       fontMetrics;
 
 
-    public Game() {
+    public Game(ImagesLoader imagesLoader, Font marioFont) {
         setFocusable(true);
 
-        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
         clipsLoader.play("background", true);
         String currentMap = "world" + world + "level" + level;
@@ -52,15 +47,9 @@ public class Game extends JPanel implements Runnable{
         mapManager = new MapManager(imagesLoader, currentMap);
         mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
 
-
-
         addKeyListener(new InputManager(mario));
-        try {
-            Font marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
-            fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
     }
 
     public void startGame() {
