@@ -4,9 +4,13 @@ public class Player {
     int id;
     String name;
     String account;
-    String score;
+    int score;
 
-    public Player(int id, String name, String account, String score) {
+    public Player(String name, String account) {
+        this(0, name, account, 0);
+    }
+
+    public Player(int id, String name, String account, int score) {
         this.id = id;
         this.name = name;
         this.account = account;
@@ -37,11 +41,11 @@ public class Player {
         this.account = account;
     }
 
-    public String getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(String score) {
+    public void setScore(int score) {
         this.score = score;
     }
 }

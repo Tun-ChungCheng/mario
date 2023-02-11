@@ -40,24 +40,21 @@ public class Game extends JPanel implements Runnable{
 
     public Game(ImagesLoader imagesLoader, Database marioDatabase, Font marioFont) {
         setFocusable(true);
-
         this.marioDatabase = marioDatabase;
 
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
-        clipsLoader.play("background", true);
-        String currentMap = "world" + world + "level" + level;
-
-        camera = new Camera();
-        mapManager = new MapManager(imagesLoader, currentMap);
-        mario = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
+        camera      = new Camera();
+        mapManager  = new MapManager(imagesLoader, world, level);
+        mario       = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
 
         addKeyListener(new InputManager(mario));
-
         fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
     }
 
     public void startGame() {
         if (animator == null || !running) {
+            clipsLoader.play("background", true);
+
             animator = new Thread(this);
             animator.start();
         }
@@ -114,7 +111,7 @@ public class Game extends JPanel implements Runnable{
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
             if (mario.isDie())
-                new Timer(3000, (e) -> gameOver = true).start();
+                new Timer(5000, (e) -> gameOver = true).start();
             camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();
             mapManager.updateSprite();
@@ -130,8 +127,9 @@ public class Game extends JPanel implements Runnable{
     }
 
     private void reportStatus(Graphics g) {
-        String record  = ("SCORE %06d    WORLD %d-%d    TIME %d")
-                .formatted(mario.getScore(), world, level, countdown);
+        String playerName = marioDatabase.getPlayer().getName();
+        String record  = ("%s %06d    WORLD %d-%d    TIME %d")
+                .formatted(playerName, mario.getScore(), world, level, countdown);
         int x = (WINDOW_WIDTH - fontMetrics.stringWidth(record)) / 2;
         int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 12;
 

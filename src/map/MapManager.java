@@ -17,20 +17,22 @@ public class MapManager {
     private final ImagesLoader imagesLoader;
     private GameElement gameElement;
     private ArrayList<Sprite> mapElements;
+    private final String mapName;
 
 
-    public MapManager(ImagesLoader imagesLoader, String mapName) {
+    public MapManager(ImagesLoader imagesLoader, int world, int level) {
         this.imagesLoader = imagesLoader;
-        setMap(mapName);
-        resetGame(mapName);
+        mapName = "world" + world + "level" + level;
+        setMap();
+        resetGame();
     }
 
-    private void setMap(String mapName) {
+    private void setMap() {
         map = imagesLoader.getImage(mapName);
         if (map == null) System.out.println("No sprite image for " + mapName);
     }
 
-    private void resetGame(String mapName) {
+    private void resetGame() {
         GameElement game = switch (mapName) {
             case "world1level1" -> new World1Level1(imagesLoader);
             default -> null;
