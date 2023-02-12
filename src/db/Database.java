@@ -35,14 +35,12 @@ public class Database {
             statement.setString(1, account);
             ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
-                if (BCrypt.checkpw(password, resultSet.getString("password"))) {
-                    player = new Player( resultSet.getInt("id"),
+            if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
+                player = new Player( resultSet.getInt("id"),
                                          resultSet.getString("name"),
                                          resultSet.getString("account"),
                                          resultSet.getInt("score") );
-                    return true;
-                } else return false;
+                return true;
             } else return false;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
