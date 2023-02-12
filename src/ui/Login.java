@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Login extends UserInterface implements ActionListener {
-
     public Login(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
         this.game = game;

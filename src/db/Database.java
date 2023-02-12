@@ -11,15 +11,11 @@ public class Database {
     private static final String DATABASE = "mario";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
-    private static final String CHECK_ACCOUNT = "SELECT count(*) count FROM players WHERE account = ?";
-    private static final String CREATE_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
-    private static final String LOG_IN = "SELECT * FROM players WHERE account = ?";
-    private static final String UPDATE_SCORE = "UPDATE players SET score = ? WHERE account = ?";
-    private static final String READ_TOP_10_PLAYERS = "SELECT * FROM players ORDER BY score DESC LIMIT 10";
 
     public Connection connection;
 
     private Player player;
+
 
     public Database() throws SQLException {
         Properties properties = new Properties();
@@ -34,7 +30,8 @@ public class Database {
     }
 
     public boolean logIn(String account, String password) {
-        try (PreparedStatement statement = connection.prepareStatement(LOG_IN)) {
+        String sql = "SELECT * FROM players WHERE account = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, account);
             ResultSet resultSet = statement.executeQuery();
 
@@ -53,7 +50,8 @@ public class Database {
     }
 
     public boolean checkAccount(String account) {
-        try (PreparedStatement statement = connection.prepareStatement(CHECK_ACCOUNT)) {
+        String sql = "SELECT count(*) count FROM players WHERE account = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, account);
 
             if (account.equals("")) return false;
@@ -66,7 +64,8 @@ public class Database {
     }
 
     public boolean createAccount(String name, String account, String password) {
-        try (PreparedStatement statement = connection.prepareStatement(CREATE_ACCOUNT)) {
+        String sql = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             statement.setString(2, account);
             statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt()));
@@ -85,7 +84,9 @@ public class Database {
             System.out.printf("Previous score %d greater equal current score %d.%n", player.getScore(), score);
             return;
         }
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_SCORE)) {
+
+        String sql = "UPDATE players SET score = ? WHERE account = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, score);
             statement.setString(2, player.getAccount());
 
@@ -98,7 +99,8 @@ public class Database {
 
     public Object[][] getTopTenPlayers() {
         try (Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(READ_TOP_10_PLAYERS);
+            String sql = "SELECT * FROM players ORDER BY score DESC LIMIT 10";
+            ResultSet resultSet = statement.executeQuery(sql);
             Object[][] players = new Object[10][3];
 
             for(int rank = 1; resultSet.next();rank++) {

@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 
 
 public class Register extends UserInterface implements ActionListener {
-
     public Register(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
         this.game = game;
@@ -52,7 +51,7 @@ public class Register extends UserInterface implements ActionListener {
         String action = e.getActionCommand();
         switch (action) {
             case "login" -> cardLayout.show(cards, "login");
-            case "rank"     -> cardLayout.show(cards, "rank");
+            case "rank"  -> cardLayout.show(cards, "rank");
             case "play"  -> register();
         }
     }
@@ -78,6 +77,4 @@ public class Register extends UserInterface implements ActionListener {
         else
             showErrorMessage("Player exist!");
         }
-
-
 }
