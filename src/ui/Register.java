@@ -35,18 +35,24 @@ public class Register extends UserInterface implements ActionListener {
         loginButton.setFont(marioFont);
         loginButton.addActionListener(this);
 
+        rankButton = new JButton("rank");
+        rankButton.setBounds(405, 550, 80, 30);
+        rankButton.setFont(marioFont);
+        rankButton.addActionListener(this);
+
         add(nameLabel);
         add(nameField);
         add(playButton);
         add(loginButton);
+        add(rankButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-
         switch (action) {
             case "login" -> cardLayout.show(cards, "login");
+            case "rank"     -> cardLayout.show(cards, "rank");
             case "play"  -> register();
         }
     }
@@ -73,7 +79,5 @@ public class Register extends UserInterface implements ActionListener {
             showErrorMessage("Player exist!");
         }
 
-    private void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
+
 }

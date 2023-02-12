@@ -142,7 +142,10 @@ public class Mario extends Sprite {
 
         if (y > block.y) {
             if (block instanceof RedBrick || block instanceof ItemBrick) {
-                if (y < block.y + block.height) y = block.y + block.height;
+                if (y < block.y + block.height) {
+                    y = block.y + block.height;
+                    maxUp = true;
+                }
                 if (block instanceof ItemBrick && !((ItemBrick) block).isHit()) {
                     ((ItemBrick) block).shake();
                     clipsLoader.play("coin", false);

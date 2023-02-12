@@ -35,11 +35,14 @@ public class Game extends JPanel implements Runnable{
     private ClipsLoader       clipsLoader;
     private FontMetrics       fontMetrics;
     private Database          marioDatabase;
-
+    private JPanel            cards;
+    private CardLayout        cardLayout;
 
     public Game(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
         setFocusable(true);
         this.marioDatabase = marioDatabase;
+        this.cards = cards;
+        cardLayout = (CardLayout) cards.getLayout();
 
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
         camera      = new Camera();
@@ -95,7 +98,7 @@ public class Game extends JPanel implements Runnable{
                 lastCheck = System.currentTimeMillis();
                 System.out.printf("FPS = %d | UPS = %d%n", frames, updates);
                 frames = updates = 0;
-                if (!gameOver) countdown--;
+                if (!gameOver && countdown > 0) countdown--;
                 else gameOver();
             }
         }
@@ -103,11 +106,19 @@ public class Game extends JPanel implements Runnable{
     }
 
     private void gameOver() {
-        running = false;
         if (!scoreSaved) {
-            saveScoreToDatabase();
             scoreSaved = true;
+            saveScoreToDatabase();
+            updateRankUI();
+            switchToRankUI();
         }
+    }
+
+    private void updateRankUI() {
+    }
+
+    private void switchToRankUI() {
+        new Timer(1500, (e) -> cardLayout.show(cards, "rank")).start();
     }
 
     @Override
@@ -118,7 +129,7 @@ public class Game extends JPanel implements Runnable{
 
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
-            if (mario.isDie())
+            if (mario.isDie() || countdown == 0)
                 new Timer(3000, (e) -> gameOver = true).start();
             camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();

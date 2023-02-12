@@ -20,6 +20,7 @@ public abstract class UserInterface extends JPanel {
     protected JLabel nameLabel, accountLabel, passwordLabel;
     protected JTextField accountField, nameField;
     protected JPasswordField passwordField;
+    protected JTable rankTable;
     protected BufferedImage titleImage, mapImage;
     protected Game game;
     protected Database marioDatabase;
@@ -77,5 +78,9 @@ public abstract class UserInterface extends JPanel {
         g.drawImage(mapImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
         g.drawImage(titleImage, (WINDOW_WIDTH - width) / 2, (WINDOW_HEIGHT - height) / 4,
                 width, height, null);
+    }
+
+    protected void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

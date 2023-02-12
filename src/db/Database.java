@@ -15,7 +15,7 @@ public class Database {
     private static final String CREATE_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
     private static final String LOG_IN = "SELECT * FROM players WHERE account = ?";
     private static final String UPDATE_SCORE = "UPDATE players SET score = ? WHERE account = ?";
-
+    private static final String READ_TOP_10_PLAYERS = "SELECT * FROM players ORDER BY score DESC LIMIT 10";
 
     public Connection connection;
 
@@ -31,11 +31,6 @@ public class Database {
         if (connection != null)
             System.out.printf("Connect to SERVER %s DATABASE %s successful%n", HOST, DATABASE);
         assert connection != null;
-
-//        PreparedStatement statement = connection.prepareStatement(QUERY_ALL,
-//                                                                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-//                                                                    ResultSet.CONCUR_UPDATABLE);
-
     }
 
     public boolean logIn(String account, String password) {
@@ -49,10 +44,6 @@ public class Database {
                                          resultSet.getString("name"),
                                          resultSet.getString("account"),
                                          resultSet.getInt("score") );
-                    System.out.println(player.getId());
-                    System.out.println(player.getName());
-                    System.out.println(player.getAccount());
-                    System.out.println(player.getScore());
                     return true;
                 } else return false;
             } else return false;
@@ -83,8 +74,7 @@ public class Database {
             if (statement.executeUpdate() != 0) {
                 player = new Player(name, account);
                 return true;
-            }
-            else return false;
+            } else return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -101,6 +91,23 @@ public class Database {
 
             if (statement.executeUpdate() == 1) System.out.println("Update successful!");
             else System.out.println("Update fail!");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Object[][] getTopTenPlayers() {
+        try (Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(READ_TOP_10_PLAYERS);
+            Object[][] players = new Object[10][3];
+
+            for(int rank = 1; resultSet.next();rank++) {
+                players[rank - 1][0] = "No." + rank;
+                players[rank - 1][1] = resultSet.getString("name");
+                players[rank - 1][2] = resultSet.getString("score");
+            }
+
+            return players;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

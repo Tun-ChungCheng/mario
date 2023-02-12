@@ -39,7 +39,6 @@ public class Login extends UserInterface implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-
         switch (action) {
             case "register" -> cardLayout.show(cards, "register");
             case "rank"     -> cardLayout.show(cards, "rank");
@@ -55,6 +54,6 @@ public class Login extends UserInterface implements ActionListener {
             game.startGame();
             cardLayout.show(cards, "play");
         } else
-            JOptionPane.showMessageDialog(null, "Login fail!", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Log in fail!");
     }
 }
