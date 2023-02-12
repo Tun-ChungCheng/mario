@@ -25,11 +25,13 @@ public class MapManager {
         mapName = "world" + world + "level" + level;
         setMap();
         resetGame();
+
     }
 
     private void setMap() {
         map = imagesLoader.getImage(mapName);
         if (map == null) System.out.println("No sprite image for " + mapName);
+
     }
 
     private void resetGame() {

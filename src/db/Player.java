@@ -1,10 +1,10 @@
 package db;
 
 public class Player {
-    int id;
-    String name;
-    String account;
-    int score;
+    private int id;
+    private String name;
+    private String account;
+    private int score;
 
     public Player(String name, String account) {
         this(0, name, account, 0);

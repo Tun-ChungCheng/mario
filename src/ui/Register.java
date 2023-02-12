@@ -15,7 +15,7 @@ public class Register extends UserInterface implements ActionListener {
     public Register(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
         this.game = game;
-        addSameComponentToPane();
+        initialCommonComponent();
 
         nameLabel = new JLabel("name");
         nameLabel.setFont(marioFont);
@@ -57,19 +57,23 @@ public class Register extends UserInterface implements ActionListener {
         password = String.valueOf(passwordField.getPassword());
 
         if (marioDatabase.checkAccount(account)) {
-            if (marioDatabase.addPlayer(name, account, password)) {
+            if (marioDatabase.createAccount(name, account, password)) {
                 cardLayout.show(cards, "play");
                 game.startGame();
             } else
-                JOptionPane.showMessageDialog(null, "Add player error!", "Error", JOptionPane.ERROR_MESSAGE);
+                showErrorMessage("Add player error!");
         }
         else if(name.equals(""))
-            JOptionPane.showMessageDialog(null, "Name can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Name can't be empty!");
         else if(account.equals(""))
-            JOptionPane.showMessageDialog(null, "Account can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Account can't be empty!");
         else if(password.equals(""))
-            JOptionPane.showMessageDialog(null, "Password can't be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Password can't be empty!");
         else
-            JOptionPane.showMessageDialog(null, "Player exist!", "Error", JOptionPane.ERROR_MESSAGE);
+            showErrorMessage("Player exist!");
         }
+
+    private void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }

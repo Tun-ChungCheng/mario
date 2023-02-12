@@ -68,7 +68,7 @@ public class Main implements ActionListener {
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
 
         cards                     = new JPanel      (new CardLayout());
-        Game game                 = new Game        (imagesLoader, marioDatabase, marioFont);
+        Game game                 = new Game        (imagesLoader, cards, marioDatabase, marioFont);
         Login login               = new Login       (imagesLoader, cards, marioDatabase, marioFont, game);
         Register register         = new Register    (imagesLoader, cards, marioDatabase, marioFont, game);
         Rank rank                 = new Rank        (imagesLoader, cards, marioDatabase, marioFont);

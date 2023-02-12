@@ -15,7 +15,6 @@ import static main.Main.WINDOW_WIDTH;
 
 
 public class Game extends JPanel implements Runnable{
-
     private static final int FPS = 120;
     private static final int UPS = 200;
     private static final int SPAWN_X = 200;
@@ -26,7 +25,7 @@ public class Game extends JPanel implements Runnable{
     private volatile boolean running  = false,
                              isPaused = false,
                              gameOver = false;
-
+    private boolean scoreSaved = false;
     private int world     = 1,
                 level     = 1,
                 countdown = 300;
@@ -38,7 +37,7 @@ public class Game extends JPanel implements Runnable{
     private Database          marioDatabase;
 
 
-    public Game(ImagesLoader imagesLoader, Database marioDatabase, Font marioFont) {
+    public Game(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
         setFocusable(true);
         this.marioDatabase = marioDatabase;
 
@@ -97,9 +96,18 @@ public class Game extends JPanel implements Runnable{
                 System.out.printf("FPS = %d | UPS = %d%n", frames, updates);
                 frames = updates = 0;
                 if (!gameOver) countdown--;
+                else gameOver();
             }
         }
         System.exit(0);
+    }
+
+    private void gameOver() {
+        running = false;
+        if (!scoreSaved) {
+            saveScoreToDatabase();
+            scoreSaved = true;
+        }
     }
 
     @Override
@@ -111,7 +119,7 @@ public class Game extends JPanel implements Runnable{
     public void gameUpdate() {
         if (!gameOver && !isPaused) {
             if (mario.isDie())
-                new Timer(5000, (e) -> gameOver = true).start();
+                new Timer(3000, (e) -> gameOver = true).start();
             camera.updatePosition(mario.x, mario.y);
             mario.updateSprite();
             mapManager.updateSprite();
@@ -150,8 +158,6 @@ public class Game extends JPanel implements Runnable{
         g.setColor(Color.white);
         g.setFont(fontMetrics.getFont());
         g.drawString(message, x, y);
-
-        saveScoreToDatabase();
     }
 
     private void saveScoreToDatabase() {

@@ -12,7 +12,7 @@ public class Database {
     private static final String USER = "root";
     private static final String PASSWORD = "root";
     private static final String CHECK_ACCOUNT = "SELECT count(*) count FROM players WHERE account = ?";
-    private static final String INSERT_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
+    private static final String CREATE_ACCOUNT = "INSERT INTO players (name, account, password) VALUES (?, ?, ?)";
     private static final String LOG_IN = "SELECT * FROM players WHERE account = ?";
     private static final String UPDATE_SCORE = "UPDATE players SET score = ? WHERE account = ?";
 
@@ -74,8 +74,8 @@ public class Database {
         }
     }
 
-    public boolean addPlayer(String name, String account, String password) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_ACCOUNT)) {
+    public boolean createAccount(String name, String account, String password) {
+        try (PreparedStatement statement = connection.prepareStatement(CREATE_ACCOUNT)) {
             statement.setString(1, name);
             statement.setString(2, account);
             statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt()));
@@ -91,6 +91,10 @@ public class Database {
     }
 
     public void updateScore(int score) {
+        if (player.getScore() >= score) {
+            System.out.printf("Previous score %d greater equal current score %d.%n", player.getScore(), score);
+            return;
+        }
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_SCORE)) {
             statement.setInt(1, score);
             statement.setString(2, player.getAccount());

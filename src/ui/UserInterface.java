@@ -26,8 +26,8 @@ public abstract class UserInterface extends JPanel {
     protected Font marioFont;
     protected String account, password, name;
 
-
     private ImagesLoader imagesLoader;
+
 
     public UserInterface(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
         this.imagesLoader = imagesLoader;
@@ -40,9 +40,13 @@ public abstract class UserInterface extends JPanel {
         setLayout(null);
     }
 
+    private void setImage() {
+        titleImage = imagesLoader.getImage("title");
+        mapImage = imagesLoader.getImage("world1level1")
+                .getSubimage(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    }
 
-
-    protected void addSameComponentToPane() {
+    protected void initialCommonComponent() {
         accountLabel = new JLabel("account");
         accountLabel.setFont(marioFont);
         accountLabel.setBounds(200, 450, 150, 30);
@@ -62,13 +66,6 @@ public abstract class UserInterface extends JPanel {
         add(accountField);
         add(passwordLabel);
         add(passwordField);
-    }
-
-
-    private void setImage() {
-        titleImage = imagesLoader.getImage("title");
-        mapImage = imagesLoader.getImage("world1level1")
-                .getSubimage(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     @Override

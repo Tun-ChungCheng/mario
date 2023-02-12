@@ -14,7 +14,7 @@ public class Login extends UserInterface implements ActionListener {
     public Login(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font font, Game game) {
         super(imagesLoader, cards, marioDatabase, font);
         this.game = game;
-        addSameComponentToPane();
+        initialCommonComponent();
 
         registerButton = new JButton("register");
         registerButton.setBounds(285, 550, 110, 30);
