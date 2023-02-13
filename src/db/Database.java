@@ -101,7 +101,7 @@ public class Database {
             ResultSet resultSet = statement.executeQuery(sql);
             Object[][] players = new Object[10][3];
 
-            for(int rank = 1; resultSet.next();rank++) {
+            for(int rank = 1; resultSet.next(); rank++) {
                 players[rank - 1][0] = "No." + rank;
                 players[rank - 1][1] = resultSet.getString("name");
                 players[rank - 1][2] = resultSet.getString("score");

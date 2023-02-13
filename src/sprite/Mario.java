@@ -18,8 +18,14 @@ public class Mario extends Sprite {
     private static final int MAX_UP_STEPS = 80;
 
     private int dx, dy, upCount, score;
-    private boolean isUp, isRight, isDown, isLeft, isJump,
-                    isFacingRight, maxUp, isDie;
+    private boolean isUp;
+    private boolean isRight;
+    private boolean isDown;
+    private boolean isLeft;
+    private boolean isJump;
+    private boolean isFacingRight;
+    private boolean maxUp;
+    private boolean isDie;
     private ArrayList<Sprite> mapElements;
     private ClipsLoader clipsLoader;
 
@@ -135,12 +141,14 @@ public class Mario extends Sprite {
     }
 
     private void blockCollision(Block block) {
-        if (y < block.y && x > block.y) {
+        boolean isUnderBlock = y > block.y + block.height / 2;
+
+        if (!isUnderBlock) {
             y = block.y - height;
             resetJump();
         }
 
-        if (y > block.y) {
+        if (isUnderBlock) {
             if (block instanceof RedBrick || block instanceof ItemBrick) {
                 if (y < block.y + block.height) {
                     y = block.y + block.height;
@@ -159,6 +167,9 @@ public class Mario extends Sprite {
             }
         }
     }
+
+
+
     // ------------------------ Getter / Setter ------------------------
 
     public void setUp(boolean up) {

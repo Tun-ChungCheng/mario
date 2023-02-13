@@ -3,6 +3,7 @@ package main;
 import db.Database;
 import map.MapManager;
 import sprite.Mario;
+import ui.Rank;
 import util.Camera;
 import util.ClipsLoader;
 import util.ImagesLoader;
@@ -37,10 +38,13 @@ public class Game extends JPanel implements Runnable{
     private Database          marioDatabase;
     private JPanel            cards;
     private CardLayout        cardLayout;
+    private Rank              rank;
 
-    public Game(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
+
+    public Game(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont, Rank rank) {
         setFocusable(true);
         this.marioDatabase = marioDatabase;
+        this.rank = rank;
         this.cards = cards;
         cardLayout = (CardLayout) cards.getLayout();
 
@@ -115,6 +119,7 @@ public class Game extends JPanel implements Runnable{
     }
 
     private void updateRankUI() {
+        rank.updateModel();
     }
 
     private void switchToRankUI() {

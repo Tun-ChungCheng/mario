@@ -76,7 +76,7 @@ public abstract class UserInterface extends JPanel {
         int height = titleImage.getHeight() * SCALE;
 
         g.drawImage(mapImage, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, null);
-        g.drawImage(titleImage, (WINDOW_WIDTH - width) / 2, (WINDOW_HEIGHT - height) / 4,
+        g.drawImage(titleImage, (WINDOW_WIDTH - width) / 2, (WINDOW_HEIGHT - height) / 5,
                 width, height, null);
     }
 

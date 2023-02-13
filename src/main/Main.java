@@ -22,8 +22,6 @@ public class Main implements ActionListener {
     private static final String FONT_DIR = "font/mario.ttf";
 
 
-
-
     private JPanel cards;
     private static Database marioDatabase;
 
@@ -67,15 +65,16 @@ public class Main implements ActionListener {
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
 
-        cards                     = new JPanel      (new CardLayout());
-        Game game                 = new Game        (imagesLoader, cards, marioDatabase, marioFont);
-        Login login               = new Login       (imagesLoader, cards, marioDatabase, marioFont, game);
-        Register register         = new Register    (imagesLoader, cards, marioDatabase, marioFont, game);
-        Rank rank                 = new Rank        (imagesLoader, cards, marioDatabase, marioFont);
+        cards                     = new JPanel  (new CardLayout());
+        Rank rank                 = new Rank    (imagesLoader, cards, marioDatabase, marioFont);
+        Game game                 = new Game    (imagesLoader, cards, marioDatabase, marioFont, rank);
+        Login login               = new Login   (imagesLoader, cards, marioDatabase, marioFont, game);
+        Register register         = new Register(imagesLoader, cards, marioDatabase, marioFont, game);
 
-        game.addComponentListener(new FocusManager());
-        login.addComponentListener(new FocusManager());
+        game.addComponentListener    (new FocusManager());
+        login.addComponentListener   (new FocusManager());
         register.addComponentListener(new FocusManager());
+        rank.addComponentListener    (new FocusManager());
 
         cards.add(login, "login");
         cards.add(register, "register");

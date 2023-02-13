@@ -4,6 +4,7 @@ import db.Database;
 import util.ImagesLoader;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +14,11 @@ import static main.Main.WINDOW_HEIGHT;
 import static main.Main.WINDOW_WIDTH;
 
 public class Rank extends UserInterface implements ActionListener {
+    private Object[][] data;
+
+
     public Rank(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font game) {
         super(imagesLoader, cards, marioDatabase, game);
-
-        Object[][] data = marioDatabase.getTopTenPlayers();
-        String[] columnNames = {"RANK", "NAME", "SCORE"};
 
         loginButton = new JButton("login");
         loginButton.setBounds(285, 550, 110, 30);
@@ -29,21 +30,19 @@ public class Rank extends UserInterface implements ActionListener {
         registerButton.setFont(marioFont);
         registerButton.addActionListener(this);
 
-        rankTable = new JTable(data, columnNames);
+        rankTable = new JTable(new RankTableModel());
         rankTable.setBounds(200, 50, 500, 500);
         rankTable.setForeground(Color.white);
         rankTable.setFont(marioFont);
         rankTable.setRowHeight(50);
         rankTable.setShowGrid(false);
         rankTable.setOpaque(false);
-        rankTable.setColumnSelectionAllowed(false);
+        rankTable.setCellSelectionEnabled(false);
         ((DefaultTableCellRenderer)rankTable.getDefaultRenderer(Object.class)).setOpaque(false);
 
         add(loginButton);
         add(registerButton);
         add(rankTable);
-
-        //https://stackoverflow.com/questions/17232118/java-update-database-on-jtable-cell-change
     }
 
     @Override
@@ -56,7 +55,37 @@ public class Rank extends UserInterface implements ActionListener {
         String action = e.getActionCommand();
         switch (action) {
             case "register" -> cardLayout.show(cards, "register");
-            case "login"     -> cardLayout.show(cards, "login");
+            case "login"    -> cardLayout.show(cards, "login");
         }
+    }
+
+    public void updateModel() {
+        rankTable.setModel(new RankTableModel());
+    }
+
+    private class RankTableModel extends AbstractTableModel {
+        private Object[][] data = marioDatabase.getTopTenPlayers();
+
+
+        @Override
+        public void fireTableDataChanged() {
+            super.fireTableDataChanged();
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.length;
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            return data[rowIndex][columnIndex];
+        }
+
     }
 }
