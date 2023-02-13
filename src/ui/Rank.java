@@ -14,9 +14,6 @@ import static main.Main.WINDOW_HEIGHT;
 import static main.Main.WINDOW_WIDTH;
 
 public class Rank extends UserInterface implements ActionListener {
-    private Object[][] data;
-
-
     public Rank(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font game) {
         super(imagesLoader, cards, marioDatabase, game);
 
