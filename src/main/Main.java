@@ -13,17 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-// https://www.mariouniverse.com/sprites-nes-smb/
+
 public class Main implements ActionListener {
     public static final int WINDOW_WIDTH = 768;
     public static final int WINDOW_HEIGHT = 720;
-
     private static final String IMAGES_INFO = "imagesInfo.txt";
     private static final String FONT_DIR = "font/mario.ttf";
-
-
-    private JPanel cards;
     private static Database marioDatabase;
+    private JPanel cards;
+
 
     public static void main(String[] args) {
         try {
@@ -64,17 +62,19 @@ public class Main implements ActionListener {
         }
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-
         cards                     = new JPanel  (new CardLayout());
         Rank rank                 = new Rank    (imagesLoader, cards, marioDatabase, marioFont);
         Game game                 = new Game    (imagesLoader, cards, marioDatabase, marioFont, rank);
         Login login               = new Login   (imagesLoader, cards, marioDatabase, marioFont, game);
         Register register         = new Register(imagesLoader, cards, marioDatabase, marioFont, game);
 
-        game.addComponentListener    (new FocusManager());
-        login.addComponentListener   (new FocusManager());
-        register.addComponentListener(new FocusManager());
-        rank.addComponentListener    (new FocusManager());
+        game.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                Component source = (Component) e.getSource();
+                source.requestFocusInWindow();
+            }
+        });
 
         cards.add(login,    "login");
         cards.add(register, "register");

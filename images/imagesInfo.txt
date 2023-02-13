@@ -8,7 +8,7 @@ o jumpRight.png
 o die.png
 
 // scenery images
-o world1level1.png
+o map.png
 
 // enemy's images
 s goomba.png 2

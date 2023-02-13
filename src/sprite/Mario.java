@@ -1,6 +1,6 @@
 package sprite;
 
-import map.MapManager;
+import map.Map;
 import sprite.block.Block;
 import sprite.block.ItemBrick;
 import sprite.block.Pipe;
@@ -17,26 +17,18 @@ public class Mario extends Sprite {
     private static final int HEIGHT = 48;
     private static final int MAX_UP_STEPS = 80;
 
-    private final int dx;
-    private final int dy;
-    private int upCount;
-    private int score;
-    private boolean isUp;
-    private boolean isRight;
-    private boolean isLeft;
-    private boolean isJump;
-    private boolean isFacingRight;
-    private boolean maxUp;
-    private boolean isDie;
-    private final ArrayList<Sprite> mapElements;
+    private final int dx, dy;
+    private int upCount, score;
+    private boolean isUp, isRight, isLeft, isJump;
+    private boolean maxUp, isFacingRight, isDie;
+    private final ArrayList<Sprite> elements;
     private final ClipsLoader clipsLoader;
 
 
-    public Mario(int x, int y, ImagesLoader imagesLoader,
-                 ClipsLoader clipsLoader, MapManager mapManager) {
+    public Mario(int x, int y, ImagesLoader imagesLoader, ClipsLoader clipsLoader, Map map) {
         super(x, y, WIDTH, HEIGHT, imagesLoader, "idleRight");
         this.clipsLoader = clipsLoader;
-        this.mapElements = mapManager.getMapElements();
+        this.elements = map.getElements();
 
         dx = 1; dy = 8; upCount = 0; score = 0;
         isFacingRight = true; isDie = false;
@@ -97,8 +89,8 @@ public class Mario extends Sprite {
                 maxUp = true;
                 upCount = 0;
             } else {
-                upCount++;
                 isJump = true;
+                upCount++;
             }
         }
     }
@@ -115,7 +107,7 @@ public class Mario extends Sprite {
     }
 
     private void checkCollision() {
-        for (Sprite element: mapElements) {
+        for (Sprite element: elements) {
             if (this.intersects(element)) {
                 if (element instanceof Enemy enemy) enemyCollision(enemy);
                 if (element instanceof Block block) blockCollision(block);
@@ -170,9 +162,6 @@ public class Mario extends Sprite {
             }
         }
     }
-
-
-    // ------------------------ Getter / Setter ------------------------
 
     public void setUp(boolean up) {
         isUp = up;

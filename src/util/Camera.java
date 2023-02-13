@@ -1,28 +1,37 @@
 package util;
 
-import main.Game;
 
 import java.awt.Graphics;
 
 
 import static main.Main.WINDOW_HEIGHT;
 import static main.Main.WINDOW_WIDTH;
-import static map.MapManager.MAP_HEIGHT;
-import static map.MapManager.MAP_WIDTH;
+import static map.Map.MAP_HEIGHT;
+import static map.Map.MAP_WIDTH;
 
 public class Camera {
     private int x, y;
-    private int offsetMaxX = MAP_WIDTH - WINDOW_WIDTH;
-    private int offsetMaxY = MAP_HEIGHT - WINDOW_HEIGHT;
-    private int offsetMinX = 0;
-    private int offsetMinY = 0;
+    private final int offsetMaxX;
+    private final int offsetMaxY;
+    private final int offsetMinX;
+    private final int offsetMinY;
+
+    public Camera() {
+        offsetMaxX = MAP_WIDTH - WINDOW_WIDTH;
+        offsetMaxY = MAP_HEIGHT - WINDOW_HEIGHT;
+        offsetMinX = 0;
+        offsetMinY = 0;
+    }
 
     public void updatePosition(int playerX, int playerY) {
-        x = playerX - ( WINDOW_WIDTH / 4);
+        x = playerX - (WINDOW_WIDTH  / 4);
         y = playerY - (WINDOW_HEIGHT / 2);
 
-        x = Math.min(offsetMaxX, Math.max(offsetMinX, x));
-        y = Math.min(offsetMaxY, Math.max(offsetMinY, y));
+        if (x > offsetMaxX) x = offsetMaxX;
+        else if (x < offsetMinX) x = offsetMinX;
+
+        if (y > offsetMaxY) y = offsetMaxY;
+        else if (y < offsetMinY) y = offsetMinY;
     }
 
     public void render(Graphics g) {

@@ -11,10 +11,8 @@ public class Database {
     private static final String DATABASE = "mario";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
-
-    public Connection connection;
-
     private Player player;
+    public Connection connection;
 
 
     public Database() throws SQLException {
@@ -36,10 +34,9 @@ public class Database {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next() && BCrypt.checkpw(password, resultSet.getString("password"))) {
-                player = new Player( resultSet.getInt("id"),
-                                         resultSet.getString("name"),
-                                         resultSet.getString("account"),
-                                         resultSet.getInt("score") );
+                player = new Player( resultSet.getString("name"),
+                                     resultSet.getString("account"),
+                                     resultSet.getInt("score") );
                 return true;
             } else return false;
         } catch (SQLException ex) {

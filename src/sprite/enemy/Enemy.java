@@ -7,14 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class Enemy extends Sprite {
-    private int dx = 1;
-    private boolean isDie = false;
+    private int dx;
+    private boolean isDie;
+
 
     public Enemy(int x, int y, int width, int height, ImagesLoader imagesLoader, String imageName) {
         super(x, y, width, height, imagesLoader, imageName);
 
         setImage(imageName);
         loopImage(20);
+        dx = 1; isDie = false;
     }
 
     public void updateSprite() {

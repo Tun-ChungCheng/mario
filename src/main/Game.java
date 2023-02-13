@@ -1,7 +1,7 @@
 package main;
 
 import db.Database;
-import map.MapManager;
+import map.Map;
 import sprite.Mario;
 import ui.Rank;
 import util.Camera;
@@ -10,6 +10,8 @@ import util.ImagesLoader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static main.Main.WINDOW_HEIGHT;
 import static main.Main.WINDOW_WIDTH;
@@ -28,12 +30,9 @@ public class Game extends JPanel implements Runnable{
 
     private boolean scoreSaved = false;
     private int countdown = 150;
-    private final int world = 1;
-    private final int level = 1;
-
     private final Mario       mario;
     private final Camera      camera;
-    private final MapManager  mapManager;
+    private final Map map;
     private final ClipsLoader clipsLoader;
     private final FontMetrics fontMetrics;
     private final Database    marioDatabase;
@@ -51,11 +50,29 @@ public class Game extends JPanel implements Runnable{
 
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
         camera      = new Camera();
-        mapManager  = new MapManager(imagesLoader, world, level);
-        mario       = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, mapManager);
-
-        addKeyListener(new InputManager(mario));
+        map = new Map(imagesLoader);
+        mario       = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, map);
         fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP -> mario.setUp(true);
+                    case KeyEvent.VK_RIGHT -> mario.setRight(true);
+                    case KeyEvent.VK_LEFT -> mario.setLeft(true);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP -> mario.setUp(false);
+                    case KeyEvent.VK_RIGHT -> mario.setRight(false);
+                    case KeyEvent.VK_LEFT  -> mario.setLeft(false);
+                }
+            }
+        });
     }
 
     public void startGame() {
@@ -110,21 +127,14 @@ public class Game extends JPanel implements Runnable{
         System.exit(0);
     }
 
-    private void gameOver() {
-        if (!scoreSaved) {
-            scoreSaved = true;
-            saveScoreToDatabase();
-            updateRankUI();
-            switchToRankUI();
+    public void gameUpdate() {
+        if (!gameOver) {
+            if (mario.isDie() || countdown == 0)
+                new Timer(3000, (e) -> gameOver = true).start();
+            camera.updatePosition(mario.x, mario.y);
+            mario.updateSprite();
+            map.updateSprite();
         }
-    }
-
-    private void updateRankUI() {
-        rank.updateModel();
-    }
-
-    private void switchToRankUI() {
-        new Timer(1500, (e) -> cardLayout.show(cards, "rank")).start();
     }
 
     @Override
@@ -133,34 +143,12 @@ public class Game extends JPanel implements Runnable{
         gameRender(g);
     }
 
-    public void gameUpdate() {
-        if (!gameOver) {
-            if (mario.isDie() || countdown == 0)
-                new Timer(3000, (e) -> gameOver = true).start();
-            camera.updatePosition(mario.x, mario.y);
-            mario.updateSprite();
-            mapManager.updateSprite();
-        }
-    }
-
     public void gameRender(Graphics g) {
         camera.render(g);
-        mapManager.drawSprite(g);
+        map.drawSprite(g);
         mario.drawSprite(g);
         if (gameOver) gameOverMessage(g);
         reportStatus(g);
-    }
-
-    private void reportStatus(Graphics g) {
-        String playerName = marioDatabase.getPlayer().getName();
-        String record  = ("%s %06d    WORLD %d-%d    TIME %d")
-                .formatted(playerName, mario.getScore(), world, level, countdown);
-        int x = (WINDOW_WIDTH - fontMetrics.stringWidth(record)) / 2;
-        int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 12;
-
-        g.setColor(Color.white);
-        g.setFont(fontMetrics.getFont());
-        g.drawString(record, x + camera.getX(), y + camera.getY());
     }
 
     private void gameOverMessage(Graphics g) {
@@ -177,7 +165,37 @@ public class Game extends JPanel implements Runnable{
         g.drawString(message, x, y);
     }
 
-    private void saveScoreToDatabase() {
+    private void reportStatus(Graphics g) {
+        String playerName = marioDatabase.getPlayer().getName();
+        String record  = ("%s %06d    WORLD RANDOM    TIME %d")
+                .formatted(playerName, mario.getScore(), countdown);
+        int x = (WINDOW_WIDTH - fontMetrics.stringWidth(record)) / 2;
+        int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 12;
+
+        g.setColor(Color.white);
+        g.setFont(fontMetrics.getFont());
+        g.drawString(record, x + camera.getX(), y + camera.getY());
+    }
+
+    private void gameOver() {
+        if (!scoreSaved) {
+            scoreSaved = true;
+            saveScore();
+            updateRank();
+            toRankPage();
+        }
+    }
+
+    private void saveScore() {
         marioDatabase.updateScore(mario.getScore());
     }
+
+    private void updateRank() {
+        rank.updateModel();
+    }
+
+    private void toRankPage() {
+        new Timer(1500, (e) -> cardLayout.show(cards, "rank")).start();
+    }
+
 }

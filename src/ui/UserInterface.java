@@ -52,7 +52,7 @@ public abstract class UserInterface extends JPanel {
 
     private void setImage() {
         titleImage = imagesLoader.getImage("title");
-        mapImage = imagesLoader.getImage("world1level1")
+        mapImage = imagesLoader.getImage("map")
                 .getSubimage(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
