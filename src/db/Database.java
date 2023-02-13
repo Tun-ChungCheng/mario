@@ -95,9 +95,9 @@ public class Database {
         }
     }
 
-    public Object[][] getTopTenPlayers() {
+    public Object[][] getTopFivePlayers() {
         try (Statement statement = connection.createStatement()){
-            String sql = "SELECT * FROM players ORDER BY score DESC LIMIT 10";
+            String sql = "SELECT * FROM players ORDER BY score DESC LIMIT 5";
             ResultSet resultSet = statement.executeQuery(sql);
             Object[][] players = new Object[10][3];
 

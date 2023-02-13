@@ -12,13 +12,13 @@ public abstract class Sprite extends Rectangle{
 
     protected static final int FLOOR_HEIGHT = 625;
 
-    private boolean       isLooping;
-    private int           imageTick,
-                          imageSpeed,
-                          imageIndex;
-    private String        imageName;
-    private ImagesLoader  imagesLoader;
+    private boolean isLooping;
+    private int imageTick;
+    private int imageSpeed;
+    private int imageIndex;
+    private String imageName;
     private BufferedImage image;
+    private final ImagesLoader imagesLoader;
 
 
     public Sprite(int x, int y, int width, int height,

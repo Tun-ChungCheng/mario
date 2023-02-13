@@ -16,18 +16,27 @@ public abstract class UserInterface extends JPanel {
 
     protected CardLayout cardLayout;
     protected JPanel cards;
-    protected JButton playButton, loginButton, registerButton, rankButton;
-    protected JLabel nameLabel, accountLabel, passwordLabel;
-    protected JTextField accountField, nameField;
+    protected JButton playButton;
+    protected JButton loginButton;
+    protected JButton registerButton;
+    protected JButton rankButton;
+    protected JLabel nameLabel;
+    protected JLabel accountLabel;
+    protected JLabel passwordLabel;
+    protected JTextField accountField;
+    protected JTextField nameField;
     protected JPasswordField passwordField;
     protected JTable rankTable;
-    protected BufferedImage titleImage, mapImage;
+    protected BufferedImage titleImage;
+    protected BufferedImage mapImage;
     protected Game game;
     protected Database marioDatabase;
     protected Font marioFont;
-    protected String account, password, name;
+    protected String account;
+    protected String password;
+    protected String name;
 
-    private ImagesLoader imagesLoader;
+    private final ImagesLoader imagesLoader;
 
 
     public UserInterface(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {

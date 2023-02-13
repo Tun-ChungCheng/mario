@@ -17,28 +17,16 @@ public class Rank extends UserInterface implements ActionListener {
     public Rank(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font game) {
         super(imagesLoader, cards, marioDatabase, game);
 
-        loginButton = new JButton("login");
-        loginButton.setBounds(285, 550, 110, 30);
-        loginButton.setFont(marioFont);
-        loginButton.addActionListener(this);
-
-        registerButton = new JButton("register");
-        registerButton.setBounds(405, 550, 110, 30);
-        registerButton.setFont(marioFont);
-        registerButton.addActionListener(this);
-
         rankTable = new JTable(new RankTableModel());
-        rankTable.setBounds(200, 50, 500, 500);
+        rankTable.setBounds(150, 50, 500, 500);
         rankTable.setForeground(Color.white);
-        rankTable.setFont(marioFont);
-        rankTable.setRowHeight(50);
+        rankTable.setFont(marioFont.deriveFont(50f));
+        rankTable.setRowHeight(80);
         rankTable.setShowGrid(false);
         rankTable.setOpaque(false);
         rankTable.setCellSelectionEnabled(false);
         ((DefaultTableCellRenderer)rankTable.getDefaultRenderer(Object.class)).setOpaque(false);
 
-        add(loginButton);
-        add(registerButton);
         add(rankTable);
     }
 
@@ -61,13 +49,8 @@ public class Rank extends UserInterface implements ActionListener {
     }
 
     private class RankTableModel extends AbstractTableModel {
-        private Object[][] data = marioDatabase.getTopTenPlayers();
+        private final Object[][] data = marioDatabase.getTopFivePlayers();
 
-
-        @Override
-        public void fireTableDataChanged() {
-            super.fireTableDataChanged();
-        }
 
         @Override
         public int getRowCount() {
@@ -83,6 +66,5 @@ public class Rank extends UserInterface implements ActionListener {
         public Object getValueAt(int rowIndex, int columnIndex) {
             return data[rowIndex][columnIndex];
         }
-
     }
 }

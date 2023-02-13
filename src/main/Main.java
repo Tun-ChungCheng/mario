@@ -76,10 +76,10 @@ public class Main implements ActionListener {
         register.addComponentListener(new FocusManager());
         rank.addComponentListener    (new FocusManager());
 
-        cards.add(login, "login");
+        cards.add(login,    "login");
         cards.add(register, "register");
-        cards.add(game, "play");
-        cards.add(rank, "rank");
+        cards.add(game,     "play");
+        cards.add(rank,     "rank");
 
         contentPane.add(cards);
     }

@@ -61,20 +61,28 @@ public class Register extends UserInterface implements ActionListener {
         account = accountField.getText();
         password = String.valueOf(passwordField.getPassword());
 
+        if (name.equals("")){
+            showErrorMessage("Name can't be empty!");
+            return;
+        }
+        else if (name.length() > 7) {
+            showErrorMessage("Name's length greater than 7!");
+            return;
+        }
+        else if (account.equals("")) {
+            showErrorMessage("Account can't be empty!");
+            return;
+        }
+        else if (password.equals("")) {
+            showErrorMessage("Password can't be empty!");
+            return;
+        }
+
         if (marioDatabase.checkAccount(account)) {
             if (marioDatabase.createAccount(name, account, password)) {
                 cardLayout.show(cards, "play");
                 game.startGame();
-            } else
-                showErrorMessage("Add player error!");
-        }
-        else if(name.equals(""))
-            showErrorMessage("Name can't be empty!");
-        else if(account.equals(""))
-            showErrorMessage("Account can't be empty!");
-        else if(password.equals(""))
-            showErrorMessage("Password can't be empty!");
-        else
-            showErrorMessage("Player exist!");
-        }
+            } else showErrorMessage("Add player error!");
+        } else showErrorMessage("Player exist!");
+    }
 }

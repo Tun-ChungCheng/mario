@@ -23,22 +23,23 @@ public class Game extends JPanel implements Runnable{
     private static final String SOUNDS_INFO = "soundsInfo.txt";
 
     private Thread animator;
-    private volatile boolean running  = false,
-                             isPaused = false,
-                             gameOver = false;
+    private volatile boolean running  = false;
+    private volatile boolean gameOver = false;
+
     private boolean scoreSaved = false;
-    private int world     = 1,
-                level     = 1,
-                countdown = 300;
-    private Mario             mario;
-    private Camera            camera;
-    private MapManager        mapManager;
-    private ClipsLoader       clipsLoader;
-    private FontMetrics       fontMetrics;
-    private Database          marioDatabase;
-    private JPanel            cards;
-    private CardLayout        cardLayout;
-    private Rank              rank;
+    private int countdown = 150;
+    private final int world = 1;
+    private final int level = 1;
+
+    private final Mario       mario;
+    private final Camera      camera;
+    private final MapManager  mapManager;
+    private final ClipsLoader clipsLoader;
+    private final FontMetrics fontMetrics;
+    private final Database    marioDatabase;
+    private final JPanel      cards;
+    private final CardLayout  cardLayout;
+    private final Rank        rank;
 
 
     public Game(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont, Rank rank) {
@@ -102,7 +103,7 @@ public class Game extends JPanel implements Runnable{
                 lastCheck = System.currentTimeMillis();
                 System.out.printf("FPS = %d | UPS = %d%n", frames, updates);
                 frames = updates = 0;
-                if (!gameOver && countdown > 0) countdown--;
+                if (!gameOver && countdown > 0 && mario.x < 9000) countdown--;
                 else gameOver();
             }
         }
@@ -133,7 +134,7 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void gameUpdate() {
-        if (!gameOver && !isPaused) {
+        if (!gameOver) {
             if (mario.isDie() || countdown == 0)
                 new Timer(3000, (e) -> gameOver = true).start();
             camera.updatePosition(mario.x, mario.y);
@@ -179,5 +180,4 @@ public class Game extends JPanel implements Runnable{
     private void saveScoreToDatabase() {
         marioDatabase.updateScore(mario.getScore());
     }
-
 }

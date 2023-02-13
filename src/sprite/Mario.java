@@ -17,17 +17,19 @@ public class Mario extends Sprite {
     private static final int HEIGHT = 48;
     private static final int MAX_UP_STEPS = 80;
 
-    private int dx, dy, upCount, score;
+    private final int dx;
+    private final int dy;
+    private int upCount;
+    private int score;
     private boolean isUp;
     private boolean isRight;
-    private boolean isDown;
     private boolean isLeft;
     private boolean isJump;
     private boolean isFacingRight;
     private boolean maxUp;
     private boolean isDie;
-    private ArrayList<Sprite> mapElements;
-    private ClipsLoader clipsLoader;
+    private final ArrayList<Sprite> mapElements;
+    private final ClipsLoader clipsLoader;
 
 
     public Mario(int x, int y, ImagesLoader imagesLoader,
@@ -123,7 +125,8 @@ public class Mario extends Sprite {
 
     private void enemyCollision(Enemy enemy) {
         if (!enemy.isDie()) {
-            if (y + height < enemy.y + enemy.height / 2) {
+            boolean canKillEnemy = y < enemy.y;
+            if (canKillEnemy) {
                 clipsLoader.play("stomp", false);
                 enemy.die();
                 y -= height;
@@ -141,7 +144,7 @@ public class Mario extends Sprite {
     }
 
     private void blockCollision(Block block) {
-        boolean isUnderBlock = y > block.y + block.height / 2;
+        boolean isUnderBlock = y > block.y;
 
         if (!isUnderBlock) {
             y = block.y - height;
@@ -169,7 +172,6 @@ public class Mario extends Sprite {
     }
 
 
-
     // ------------------------ Getter / Setter ------------------------
 
     public void setUp(boolean up) {
@@ -178,10 +180,6 @@ public class Mario extends Sprite {
 
     public void setRight(boolean right) {
         isRight = right;
-    }
-
-    public void setDown(boolean down) {
-        isDown = down;
     }
 
     public void setLeft(boolean left) {
