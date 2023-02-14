@@ -6,15 +6,18 @@
 
 ![game](https://user-images.githubusercontent.com/91156531/218771367-5cbc3d90-2b9e-433c-b73e-d90ecaf6469e.jpeg)
 
-## API
+## What I learn
 
 <ul>
-  <li>java.lang</li>
-  <li>java.sql</li>
-  <li>java.util</li>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li> 
+    使用 <a href="https://docs.oracle.com/javase/7/docs/api/java/awt/CardLayout.html">CardLayout</a> 建立 UI 切換畫面效果
+  </li>
+  <li> 
+    使用 <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html">JTable</a> 建立排行榜表格
+  </li>
+  <li>
+    
+  </li>
 </ul>
 
 ## Screen
