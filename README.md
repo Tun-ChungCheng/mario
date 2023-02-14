@@ -22,7 +22,7 @@
 
 ## Screen
 
-![login_page](https://user-images.githubusercontent.com/91156531/218768621-2cff1e31-27d9-4f0e-9fce-1d214c1ef97d.jpeg)
+![login_page](https://user-images.githubusercontent.com/91156531/218818832-b3673d1e-6469-4587-8b31-1e1be0a2476b.jpeg)
 
 ![game_over](https://user-images.githubusercontent.com/91156531/218771395-c4ada5bd-6c55-47ed-bbff-0e5e1055857f.jpeg)
 
