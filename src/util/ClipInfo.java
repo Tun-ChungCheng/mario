@@ -2,7 +2,7 @@ package util;
 
 import javax.sound.sampled.*;
 import java.io.*;
-import java.util.Objects;
+import java.net.URL;
 
 public class ClipInfo implements LineListener {
     private static final String SOUND_DIR = "/sounds/";
@@ -21,12 +21,14 @@ public class ClipInfo implements LineListener {
 
     private void loadClip(String pathFromContentRoot) {
         try  {
-            AudioInputStream audioInputStream =
-                    AudioSystem.getAudioInputStream(Objects.requireNonNull(this.getClass().getResource(pathFromContentRoot)));
+            URL url = this.getClass().getResource(pathFromContentRoot);
+            AudioInputStream audioInputStream = null;
+            if (url != null) audioInputStream = AudioSystem.getAudioInputStream(url);
 
-            AudioFormat audioFormat = audioInputStream.getFormat();
+            AudioFormat audioFormat = null;
+            if (audioInputStream != null) audioFormat = audioInputStream.getFormat();
+
             DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
-
             if (!AudioSystem.isLineSupported(info)) {
                 System.out.println("Unsupported Clip File: " + pathFromContentRoot);
                 return;

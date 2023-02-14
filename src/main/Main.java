@@ -10,8 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.Objects;
 
 
 public class Main implements ActionListener {
@@ -59,13 +59,14 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource(ICON_DIR)));
+        URL url = this.getClass().getResource(ICON_DIR);
+        ImageIcon icon = null;
+        if (url != null) icon = new ImageIcon(url);
         window.setIconImage(icon.getImage());
 
-        Font marioFont;
-        try {
-            InputStream inputStream = this.getClass().getResourceAsStream(FONT_DIR);
-            marioFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(inputStream));
+        Font marioFont = new Font("Dialog", Font.PLAIN, 12);
+        try (InputStream inputStream = this.getClass().getResourceAsStream(FONT_DIR)) {
+            if (inputStream != null) marioFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
         } catch (IOException | FontFormatException e) {
             throw new RuntimeException(e);
         }

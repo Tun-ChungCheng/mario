@@ -34,7 +34,7 @@ public class ImagesLoader {
         System.out.println("Reading file: " + pathFromContentRoot);
         try {
             InputStream inputStream = this.getClass().getResourceAsStream(pathFromContentRoot);
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(Objects.requireNonNull(inputStream)));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
 
             String line;
             char ch;

@@ -21,7 +21,8 @@ public class ClipsLoader {
         System.out.println("Reading file: " + pathFromContentRoot);
         try {
             InputStream inputStream = this.getClass().getResourceAsStream(pathFromContentRoot);
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(Objects.requireNonNull(inputStream)));
+            BufferedReader bufferedReader = new BufferedReader(
+                                            new InputStreamReader(Objects.requireNonNull(inputStream)));
 
             StringTokenizer tokens;
             String line, name, filename;

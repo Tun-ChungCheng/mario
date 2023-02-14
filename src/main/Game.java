@@ -50,7 +50,7 @@ public class Game extends JPanel implements Runnable{
 
         clipsLoader = new ClipsLoader(SOUNDS_INFO);
         camera      = new Camera();
-        map = new Map(imagesLoader);
+        map         = new Map(imagesLoader);
         mario       = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, map);
         fontMetrics = this.getFontMetrics(marioFont.deriveFont(20f));
 
