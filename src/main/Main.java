@@ -22,6 +22,8 @@ public class Main implements ActionListener {
     private static final String FONT_DIR = "/font/mario.ttf";
 
     private static Database marioDatabase;
+    private static JFrame window;
+
     private JPanel cards;
 
 
@@ -44,14 +46,11 @@ public class Main implements ActionListener {
     }
 
     private static void createAndShowGUI() {
-        ImageIcon icon = new ImageIcon(ICON_DIR);
-
-        JFrame window = new JFrame("Super Mario Bros.");
+        window = new JFrame("Super Mario Bros.");
         window.setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setLocationRelativeTo(null);
-        window.setIconImage(icon.getImage());
 
         Main main = new Main();
         main.addComponentToPane(window.getContentPane());
@@ -60,7 +59,10 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        Font marioFont = null;
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource(ICON_DIR)));
+        window.setIconImage(icon.getImage());
+
+        Font marioFont;
         try {
             InputStream inputStream = this.getClass().getResourceAsStream(FONT_DIR);
             marioFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(inputStream));
