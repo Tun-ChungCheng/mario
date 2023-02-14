@@ -9,16 +9,18 @@ import util.ImagesLoader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
+import java.util.Objects;
 
 
 public class Main implements ActionListener {
     public static final int WINDOW_WIDTH = 768;
     public static final int WINDOW_HEIGHT = 720;
     private static final String IMAGES_INFO = "imagesInfo.txt";
-    private static final String FONT_DIR = "font/mario.ttf";
+    private static final String ICON_DIR = "/images/marioIcon.png";
+    private static final String FONT_DIR = "/font/mario.ttf";
+
     private static Database marioDatabase;
     private JPanel cards;
 
@@ -42,10 +44,14 @@ public class Main implements ActionListener {
     }
 
     private static void createAndShowGUI() {
+        ImageIcon icon = new ImageIcon(ICON_DIR);
+
         JFrame window = new JFrame("Super Mario Bros.");
         window.setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
+        window.setLocationRelativeTo(null);
+        window.setIconImage(icon.getImage());
 
         Main main = new Main();
         main.addComponentToPane(window.getContentPane());
@@ -54,19 +60,20 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        Font marioFont;
+        Font marioFont = null;
         try {
-            marioFont = Font.createFont(Font.TRUETYPE_FONT, new File(FONT_DIR));
+            InputStream inputStream = this.getClass().getResourceAsStream(FONT_DIR);
+            marioFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(inputStream));
         } catch (IOException | FontFormatException e) {
             throw new RuntimeException(e);
         }
 
         ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
-        cards                     = new JPanel  (new CardLayout());
-        Rank rank                 = new Rank    (imagesLoader, cards, marioDatabase, marioFont);
-        Game game                 = new Game    (imagesLoader, cards, marioDatabase, marioFont, rank);
-        Login login               = new Login   (imagesLoader, cards, marioDatabase, marioFont, game);
-        Register register         = new Register(imagesLoader, cards, marioDatabase, marioFont, game);
+        cards                     = new JPanel      (new CardLayout());
+        Rank rank                 = new Rank        (imagesLoader, cards, marioDatabase, marioFont);
+        Game game                 = new Game        (imagesLoader, cards, marioDatabase, marioFont, rank);
+        Login login               = new Login       (imagesLoader, cards, marioDatabase, marioFont, game);
+        Register register         = new Register    (imagesLoader, cards, marioDatabase, marioFont, game);
 
         game.addComponentListener(new ComponentAdapter() {
             @Override

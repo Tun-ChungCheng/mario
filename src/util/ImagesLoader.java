@@ -5,12 +5,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 
 
 public class ImagesLoader {
-    private static final String IMAGE_DIR = "images/";
+    private static final String IMAGE_DIR = "/images/";
 
     private HashMap<String, ArrayList<BufferedImage>> imagesMap;
     
@@ -31,7 +32,10 @@ public class ImagesLoader {
     private void loadImagesFile(String imagesInfo) {
         String pathFromContentRoot = IMAGE_DIR + imagesInfo;
         System.out.println("Reading file: " + pathFromContentRoot);
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pathFromContentRoot))) {
+        try {
+            InputStream inputStream = this.getClass().getResourceAsStream(pathFromContentRoot);
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(Objects.requireNonNull(inputStream)));
+
             String line;
             char ch;
             while((line = bufferedReader.readLine()) != null) {
@@ -43,6 +47,9 @@ public class ImagesLoader {
                 else if (ch == 's') checkIfThreeArguments(line);
                 else System.out.println("Do not recognize line: " + line);
             }
+
+            inputStream.close();
+            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -133,9 +140,8 @@ public class ImagesLoader {
 
     public BufferedImage loadImage(String filename) {
         String pathFromContentRoot = IMAGE_DIR + filename;
-
         try {
-            return ImageIO.read(new File(pathFromContentRoot));
+            return ImageIO.read(Objects.requireNonNull(getClass().getResource(pathFromContentRoot)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

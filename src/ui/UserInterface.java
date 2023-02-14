@@ -42,7 +42,7 @@ public abstract class UserInterface extends JPanel {
     public UserInterface(ImagesLoader imagesLoader, JPanel cards, Database marioDatabase, Font marioFont) {
         this.imagesLoader = imagesLoader;
         this.marioDatabase = marioDatabase;
-        this.marioFont = marioFont.deriveFont(20f);
+        this.marioFont = marioFont.deriveFont(8f);
         this.cards = cards;
         cardLayout = (CardLayout) cards.getLayout();
 

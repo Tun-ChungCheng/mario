@@ -2,11 +2,12 @@ package util;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 
 public class ClipsLoader {
-    private static final String SOUND_DIR = "sounds/";
+    private static final String SOUND_DIR = "/sounds/";
 
     private HashMap<String, ClipInfo> clipsMap;
 
@@ -18,7 +19,10 @@ public class ClipsLoader {
     private void loadSoundsFile(String soundsInfo) {
         String pathFromContentRoot = SOUND_DIR + soundsInfo;
         System.out.println("Reading file: " + pathFromContentRoot);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathFromContentRoot))) {
+        try {
+            InputStream inputStream = this.getClass().getResourceAsStream(pathFromContentRoot);
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(Objects.requireNonNull(inputStream)));
+
             StringTokenizer tokens;
             String line, name, filename;
             while ((line = bufferedReader.readLine()) != null) {
@@ -33,6 +37,9 @@ public class ClipsLoader {
                     load(name, filename);
                 }
             }
+
+            inputStream.close();
+            bufferedReader.close();
         } catch (IOException e) {
             System.out.println("Error reading file: " + pathFromContentRoot);
             System.exit(1);

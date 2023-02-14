@@ -21,7 +21,7 @@ public class Game extends JPanel implements Runnable{
     private static final int FPS = 120;
     private static final int UPS = 200;
     private static final int SPAWN_X = 200;
-    private static final int SPAWN_Y = 500;
+    private static final int SPAWN_Y = 550;
     private static final String SOUNDS_INFO = "soundsInfo.txt";
 
     private Thread animator;
@@ -29,7 +29,7 @@ public class Game extends JPanel implements Runnable{
     private volatile boolean gameOver = false;
 
     private boolean scoreSaved = false;
-    private int countdown = 150;
+    private int countdown = 120;
     private final Mario       mario;
     private final Camera      camera;
     private final Map map;
@@ -52,7 +52,7 @@ public class Game extends JPanel implements Runnable{
         camera      = new Camera();
         map = new Map(imagesLoader);
         mario       = new Mario(SPAWN_X, SPAWN_Y, imagesLoader, clipsLoader, map);
-        fontMetrics = this.getFontMetrics(marioFont.deriveFont(50f));
+        fontMetrics = this.getFontMetrics(marioFont.deriveFont(20f));
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -167,7 +167,7 @@ public class Game extends JPanel implements Runnable{
 
     private void reportStatus(Graphics g) {
         String playerName = marioDatabase.getPlayer().getName();
-        String record  = ("%s %06d    WORLD RANDOM    TIME %d")
+        String record  = ("%s %06d WORLD RANDOM TIME %d")
                 .formatted(playerName, mario.getScore(), countdown);
         int x = (WINDOW_WIDTH - fontMetrics.stringWidth(record)) / 2;
         int y = (WINDOW_HEIGHT - fontMetrics.getHeight()) / 12;

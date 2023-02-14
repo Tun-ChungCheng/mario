@@ -13,15 +13,12 @@ public abstract class Sprite extends Rectangle{
 
     private final ImagesLoader imagesLoader;
     private boolean isLooping;
-    private int imageTick;
-    private int imageSpeed;
-    private int imageIndex;
+    private int imageTick, imageSpeed, imageIndex;
     private String imageName;
     private BufferedImage image;
 
 
-    public Sprite(int x, int y, int width, int height,
-                  ImagesLoader imagesLoader, String imageName) {
+    public Sprite(int x, int y, int width, int height, ImagesLoader imagesLoader, String imageName) {
         super(x, y, width, height);
         this.imagesLoader = imagesLoader;
 

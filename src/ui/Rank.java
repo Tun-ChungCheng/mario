@@ -20,7 +20,7 @@ public class Rank extends UserInterface implements ActionListener {
         rankTable = new JTable(new RankTableModel());
         rankTable.setBounds(150, 50, 500, 500);
         rankTable.setForeground(Color.white);
-        rankTable.setFont(marioFont.deriveFont(50f));
+        rankTable.setFont(marioFont.deriveFont(30f));
         rankTable.setRowHeight(80);
         rankTable.setShowGrid(false);
         rankTable.setOpaque(false);

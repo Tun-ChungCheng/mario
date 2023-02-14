@@ -19,7 +19,6 @@ o redBrick.png
 o itemBrick.png
 o emptyBrick.png
 o pipe.png
-o coin.png
 
 // user interface images
 o title.png

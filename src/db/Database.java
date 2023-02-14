@@ -9,6 +9,8 @@ public class Database {
     private static final String URI = "jdbc:mysql://";
     private static final String HOST = "localhost:3306";
     private static final String DATABASE = "mario";
+    private static final String TABLE = "players";
+
     private static final String USER = "root";
     private static final String PASSWORD = "root";
     private Player player;
@@ -20,12 +22,37 @@ public class Database {
         properties.put("user", USER);
         properties.put("password", PASSWORD);
 
-        String url = URI + HOST + "/" + DATABASE;
+        String url = URI + HOST;
         connection = DriverManager.getConnection(url, properties);
-        if (connection != null)
-            System.out.printf("Connect to SERVER %s DATABASE %s successful%n", HOST, DATABASE);
         assert connection != null;
+        System.out.printf("Connect to SERVER %s successful%n", HOST);
+
+        createDatabase();
+        url += "/" + DATABASE;
+        connection = DriverManager.getConnection(url, properties);
+        System.out.printf("Connect to DATABASE %s successful%n", DATABASE);
+
+        createTable();
+        System.out.printf("Create TABLE %s successful%n", TABLE);
     }
+
+    private void createDatabase() throws SQLException {
+        String sql = "CREATE DATABASE IF NOT EXISTS " + DATABASE;
+        Statement statement = connection.createStatement();
+        statement.execute(sql);
+    }
+
+    private void createTable() throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE
+                + "  (`id` int(10) UNSIGNED DEFAULT NULL,"
+                + "   `name` varchar(25) DEFAULT NULL,"
+                + "   `account` varchar(50) DEFAULT NULL,"
+                + "   `password` varchar(60) DEFAULT NULL,"
+                + "   `score` bigint(11) DEFAULT '0')";
+        Statement statement = connection.createStatement();
+        statement.execute(sql);
+    }
+
 
     public boolean logIn(String account, String password) {
         String sql = "SELECT * FROM players WHERE account = ?";

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 10, 2023 at 08:34 AM
+-- Generation Time: Feb 14, 2023 at 02:11 AM
 -- Server version: 5.7.24
 -- PHP Version: 8.0.1
 
@@ -40,10 +40,11 @@ CREATE TABLE `players` (
 --
 
 INSERT INTO `players` (`id`, `name`, `account`, `password`, `score`) VALUES
-(22, 'Brad', 'Brad', '$2a$10$QMdOfNVsQSGZ9xPBAdATKu6KzjUF.u9wBuHzGHPNIz6OvZR6Pxa6G', 0),
-(23, 'test', 'test', '$2a$10$wKbDMr3PEK/hcCNtRAU6WO9G0loJh0H7vAGXtROI1ewsQzyFieZxa', 0),
-(25, 'ted', 'ted', '$2a$10$kBCjpuClBq5zD0DQ2LJFuuD1e0THO9602sv1ZrFPnaXZMMSdmEebO', 0),
-(32, 'test1', 'test1', '$2a$10$h5yM96r8qvT4Y7494nOWsODdzht0jcOJM85rom1SEQcvsfChXD/Pq', 0);
+(50, 'Apple', 'Apple', '$2a$10$/ohVpvT5vKmVCSeEVI0CauOJLFS1qFdw.VLAZbqoVdC4gWhi2pOpO', 1500),
+(51, 'Banana', 'Banana', '$2a$10$e1ojpSYG5xhmm4zQ5rzcguMvaov1T8rHANxlXzgdUbHKfb9YXcjuO', 9700),
+(52, 'Orange', 'Orange', '$2a$10$FjUgWQ17BTNufo9/AWxwv.p9khB1QaV0RMRf7p312vZdDqGcr7k1a', 6600),
+(53, 'Peach', 'Peach', '$2a$10$NzJ1qRhmW7Gb.nu3rS1E6.mJZ5aJ.VTMJNwMRrGeT59YXFYjppERS', 5200),
+(54, 'Mango', 'Mango', '$2a$10$DrbPc81TW9VvZhhrhXJp..AVKKnHW1c6wdEjXTC1E/M2qtJJfT4N6', 5700);
 
 --
 -- Indexes for dumped tables
@@ -63,7 +64,7 @@ ALTER TABLE `players`
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

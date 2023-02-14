@@ -52,12 +52,12 @@ public class Mario extends Sprite {
 
         if (!isJump && isRight) {
             setImage("runningRight");
-            loopImage(30);
+            loopImage(50);
             isFacingRight = true;
         }
         if (!isJump && isLeft) {
             setImage("runningLeft");
-            loopImage(30);
+            loopImage(50);
             isFacingRight = false;
         }
 
@@ -96,7 +96,7 @@ public class Mario extends Sprite {
     }
 
     private void updateFalling() {
-        if (y + height + GRAVITY < FLOOR_HEIGHT) y += GRAVITY;
+        if (y + height < FLOOR_HEIGHT) y += GRAVITY;
         else resetJump();
     }
 

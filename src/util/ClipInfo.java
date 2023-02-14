@@ -1,32 +1,34 @@
 package util;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Objects;
 
 public class ClipInfo implements LineListener {
-    private static final String SOUND_DIR = "sounds/";
+    private static final String SOUND_DIR = "/sounds/";
 
     private boolean isLooping = false;
-    private String name, relativePath;
+    private String name;
     private Clip clip = null;
 
 
     public ClipInfo(String name, String filename) {
         this.name = name;
-        relativePath = SOUND_DIR + filename;
+        String pathFromContentRoot = SOUND_DIR + filename;
 
-        loadClip(relativePath);
+        loadClip(pathFromContentRoot);
     }
 
-    private void loadClip(String relativePath) {
-        try (AudioInputStream audioInputStream =
-                     AudioSystem.getAudioInputStream(new File(relativePath))) {
+    private void loadClip(String pathFromContentRoot) {
+        try  {
+            AudioInputStream audioInputStream =
+                    AudioSystem.getAudioInputStream(Objects.requireNonNull(this.getClass().getResource(pathFromContentRoot)));
+
             AudioFormat audioFormat = audioInputStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
 
             if (!AudioSystem.isLineSupported(info)) {
-                System.out.println("Unsupported Clip File: " + relativePath);
+                System.out.println("Unsupported Clip File: " + pathFromContentRoot);
                 return;
             }
 
@@ -34,13 +36,13 @@ public class ClipInfo implements LineListener {
             clip.addLineListener(this);
             clip.open(audioInputStream);
         } catch (UnsupportedAudioFileException e) {
-            System.out.println("Unsupported audio file: " + relativePath);
+            System.out.println("Unsupported audio file: " + pathFromContentRoot);
         } catch (IOException e) {
-            System.out.println("Could not read: " + relativePath);
+            System.out.println("Could not read: " + pathFromContentRoot);
         } catch (LineUnavailableException e) {
-            System.out.println("No audio line available for : " + relativePath);
+            System.out.println("No audio line available for : " + pathFromContentRoot);
         } catch (Exception e) {
-            System.out.println("Problem with " + relativePath);
+            System.out.println("Problem with " + pathFromContentRoot);
         }
     }
 
