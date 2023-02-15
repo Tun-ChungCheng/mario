@@ -1,7 +1,7 @@
 # mario
 
 <blockquote> 
-  此專案為<a href="https://www.ispan.com.tw/longterm/JJEEITT">跨域 Java 軟體工程師就業養成班</a>期中專題，用來熟悉 Java 語法及 API。
+  This project is the midterm project for <a href="https://www.ispan.com.tw/longterm/JJEEITT">Cross Platform Application Development in Java, Institute for Information Industry</a>, which is designed to familiarize participants with Java syntax and APIs.
 </blockquote>
 
 ![game](https://user-images.githubusercontent.com/91156531/218771367-5cbc3d90-2b9e-433c-b73e-d90ecaf6469e.jpeg)
@@ -10,13 +10,19 @@
 
 <ul>
   <li> 
-    使用 <a href="https://docs.oracle.com/javase/7/docs/api/java/awt/CardLayout.html">CardLayout</a> 建立 UI 切換畫面效果
+    Switch UI with <a href="https://docs.oracle.com/javase/7/docs/api/java/awt/CardLayout.html">CardLayout</a>
   </li>
   <li> 
-    使用 <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html">JTable</a> 建立排行榜表格
+    Create a leaderboard with <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html">JTable</a>
   </li>
   <li>
-    
+    Create scrolling camera
+  </li>
+  <li>
+    Collision detection
+  </li>
+  <li>
+    Play multiple Clips simultaneously
   </li>
 </ul>
 
