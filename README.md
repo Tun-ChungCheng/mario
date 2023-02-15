@@ -22,7 +22,7 @@
     Collision detection
   </li>
   <li>
-    Play multiple Clips simultaneously
+    Play multiple <a href="https://docs.oracle.com/javase/7/docs/api/javax/sound/sampled/Clip.html">Clips</a> simultaneously
   </li>
 </ul>
 
