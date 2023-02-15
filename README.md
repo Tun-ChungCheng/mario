@@ -5,7 +5,6 @@
   See <a href="https://tun-chungcheng.github.io/mario/">Game Architecture</a>
 </blockquote>
 
-https://tun-chungcheng.github.io/mario/
 ![game](https://user-images.githubusercontent.com/91156531/218771367-5cbc3d90-2b9e-433c-b73e-d90ecaf6469e.jpeg)
 
 ## What I learn
