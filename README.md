@@ -1,9 +1,11 @@
 # mario
 
 <blockquote> 
-  This project is the midterm project for <a href="https://www.ispan.com.tw/longterm/JJEEITT">Cross Platform Application Development in Java, Institute for Information Industry</a>, which is designed to familiarize participants with Java syntax and APIs.
+  This project is the midterm project for <a href="https://www.ispan.com.tw/longterm/JJEEITT">Cross Platform Application Development in Java, Institute for Information Industry</a>, which is designed to familiarize participants with Java syntax and APIs.</br>
+  See <a href="https://tun-chungcheng.github.io/mario/">Game Architecture</a>
 </blockquote>
 
+https://tun-chungcheng.github.io/mario/
 ![game](https://user-images.githubusercontent.com/91156531/218771367-5cbc3d90-2b9e-433c-b73e-d90ecaf6469e.jpeg)
 
 ## What I learn
