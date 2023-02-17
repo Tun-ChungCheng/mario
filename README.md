@@ -35,7 +35,7 @@
 
   ![rank_page](https://user-images.githubusercontent.com/91156531/218771451-cdc4da29-cf31-4e0c-a3f5-427ae00fc769.jpeg)
 
-## Installation
+## Setup
 
   After downloading and running <a href="https://www.mamp.info/en/windows/">MAMP</a>, running mario.jar will automatically create a database.
 
