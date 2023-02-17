@@ -22,3 +22,4 @@ o pipe.png
 
 // user interface images
 o title.png
+o marioIcon.png

@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.net.URL;
 import java.sql.SQLException;
 
 
@@ -18,7 +17,6 @@ public class Main implements ActionListener {
     public static final int WINDOW_WIDTH = 768;
     public static final int WINDOW_HEIGHT = 720;
     private static final String IMAGES_INFO = "imagesInfo.txt";
-    private static final String ICON_DIR = "/images/marioIcon.png";
     private static final String FONT_DIR = "/font/mario.ttf";
 
     private static Database marioDatabase;
@@ -59,10 +57,8 @@ public class Main implements ActionListener {
     }
 
     private void addComponentToPane(Container contentPane) {
-        URL url = this.getClass().getResource(ICON_DIR);
-        ImageIcon icon = null;
-        if (url != null) icon = new ImageIcon(url);
-        window.setIconImage(icon.getImage());
+        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
+        window.setIconImage(imagesLoader.getImage("marioIcon"));
 
         Font marioFont = new Font("Dialog", Font.PLAIN, 12);
         try (InputStream inputStream = this.getClass().getResourceAsStream(FONT_DIR)) {
@@ -71,7 +67,6 @@ public class Main implements ActionListener {
             throw new RuntimeException(e);
         }
 
-        ImagesLoader imagesLoader = new ImagesLoader(IMAGES_INFO);
         cards                     = new JPanel      (new CardLayout());
         Rank rank                 = new Rank        (imagesLoader, cards, marioDatabase, marioFont);
         Game game                 = new Game        (imagesLoader, cards, marioDatabase, marioFont, rank);
